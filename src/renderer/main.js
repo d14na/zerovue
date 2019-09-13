@@ -28,16 +28,6 @@ const app = new Vue({
         }
     },
     mounted: function () {
-        console.log('STORE 1', store)
-        console.log(store.state.count)
-        store.dispatch('increment')
-        console.log(store.state.count)
-        store.dispatch('increment')
-        store.dispatch('increment')
-        console.log(store.state.count)
-        console.log('STORE 2', store)
-        console.log('STORE STATE', store.state)
-
         const fpath = require('path')
 
         const {app} = require('electron').remote
