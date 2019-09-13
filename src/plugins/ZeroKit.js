@@ -24,3 +24,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 })
+
+const ZeroKit = {
+    hi: 'there'
+}
+
+exports.module = ZeroKit

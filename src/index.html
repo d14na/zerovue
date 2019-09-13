@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>ZeroVue</title>
 
+    <!-- https://getuikit.com/docs/introduction -->
+
     <!-- TODO EMBED ALL EXTERNAL ASSETS INTO LOCAL PACKAGE -->
     <!-- UIkit CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/css/uikit.min.css" />
@@ -39,7 +41,7 @@
         </div>
 
         <div>
-            <button class="uk-button uk-button-danger uk-button-small">GO</button>
+            <button class="uk-button uk-button-danger uk-button-small" @click="firstTest">GO</button>
         </div>
 
         <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #app-p0rtal">P0rtal</button>
@@ -95,8 +97,11 @@
 
 <!-- TODO EMBED ALL EXTERNAL ASSETS INTO LOCAL PACKAGE -->
 <!-- VueJS -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.0net.io/libs/vue/2.5.17/js/vue.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
 <script src="https://unpkg.com/vuex@3.1.1/dist/vuex.js"></script>
+<script src="https://cdn.0net.io/libs/pouchdb/7.0.0/js/pouchdb.min.js"></script>
+<script src="https://cdn.0net.io/libs/sockjs-client/1.1.4/js/sockjs.min.js"></script>
 
 <!-- UIkit JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit.min.js"></script>

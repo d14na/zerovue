@@ -25,6 +25,12 @@ const app = new Vue({
         },
         openFile () {
             ipc.send('open-file-dialog')
+        },
+        firstTest () {
+            const ZeroKit = require(__dirname + '/plugins/ZeroKit')
+
+            console.log('firstTest')
+            console.log('ZeroKit', ZeroKit)
         }
     },
     mounted: function () {
