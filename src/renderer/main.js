@@ -1,14 +1,14 @@
-/* Initialize IPC. */
+/* Initailize constants. */
+const { app } = require('electron').remote
+const fpath = require('path')
 const ipc = require('electron').ipcRenderer
-
-/* Initialize Vuex store. */
 const store = require('./store')
 
-/* Initialize VueJS application. */
-const app = new Vue({
+/* Initialize ZeroVue application. */
+const ZeroVue = new Vue({
     el: '#app',
     data: () => ({
-        zerovue: null,
+        ZeroKit: null,
         navGreeting: 'Welcome! This is an early preview of the ZeroVue Rendering Engine.',
         mySource: '',
         preload: 'file:'
@@ -17,6 +17,25 @@ const app = new Vue({
         //
     },
     methods: {
+        initZeroKit () {
+            this.ZeroKit = document.querySelector('webview')
+
+            /* Capture ALL console messages from SANDBOX. */
+            this.ZeroKit.addEventListener('console-message', function (e) {
+                /* Parse source file. */
+            	const srcFile = e.sourceId.replace(/^.*[\\\/]/, '')
+
+                /* Build new log entry. */
+                const timestamp = `➤ ZeroKit Console ${moment().format('YYYY.MM.DD @ HH:mm:ss')}`
+                const entry = `[ ${srcFile} ](Line ${e.line}): ${e.message}`
+
+                /* Add to log manager. */
+                // App.logMgr.push(`${timestamp} ${entry}`)
+
+                /* Write to console. */
+                console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')
+            })
+        },
         open (link) {
             this.$electron.shell.openExternal(link)
         },
@@ -27,23 +46,27 @@ const app = new Vue({
             ipc.send('open-file-dialog')
         },
         firstTest () {
-            const ZeroKit = require(__dirname + '/plugins/ZeroKit')
+            const ZeroKit = require(__dirname + '/plugins/ZeroKit').module
+            // console.log('ZeroKit', ZeroKit)
 
-            console.log('firstTest')
-            console.log('ZeroKit', ZeroKit)
+            /* Initialize new ZeroKit. */
+            const zeroKit = new ZeroKit()
+
+            zeroKit.classTest('This is a `firstTest` from classTest!')
         }
     },
     mounted: function () {
-        const fpath = require('path')
-
-        const {app} = require('electron').remote
+        /* Initialize ZeroKit. */
+        this.initZeroKit()
 
         app.on('start_debugger', function (event) {
+        // app.on('start_debugger', function (event) {
             console.log('HOME wants to start the debugger')
         })
 
-        ipc.on('got-app-path', (event, path) => {
-            console.log('PATH', path)
+        /* Handle OS path request. */
+        ipc.on('got-os-app-path', (event, path) => {
+            // console.log('PATH', path)
 
             /* Insert pre-loaded script. */
             this.preload = fpath.join(
@@ -52,19 +75,20 @@ const app = new Vue({
                 '/src/plugins/ZeroKit.js'
             )
 
-            console.log('this.preload', this.preload)
+            // console.log('this.preload', this.preload)
 
+            // FOR DEVELOPMENT PURPOSES ONLY
             this.mySource = `data:text/html,
 How much <strong>HTML</strong> can we fit in here??
 <div id="testArea"><!-- test area --></div>
 <button class="uk-button uk-button-danger uk-button-small" onclick="document.getElementById('testArea').innerHTML='<b>hi-there</b>'">Start Test</button>
-<button class="uk-button uk-button-danger uk-button-small" onclick="startTest()">Start PRELOAD Test</button>
+<button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.classTest('hi again!!')">Start ALERT Test</button>
+<button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testConnection()">Test Connection</button>
 <style></style>
             `
         })
 
-        this.zerovue = document.querySelector('webview')
-        console.log('this.zerovue', this.zerovue)
+        // console.log('this.zerovue', this.zerovue)
         // const indicator = document.querySelector('.indicator')
 
         // const loadstart = () => {
@@ -80,11 +104,6 @@ How much <strong>HTML</strong> can we fit in here??
         // this.zerovue.addEventListener('did-start-loading', loadstart)
         // this.zerovue.addEventListener('did-stop-loading', loadstop)
 
-        ipc.send('get-app-path')
-
-        // setTimeout(() => {
-        //     console.log('this.zerovue [INNER]', this.zerovue)
-        //     this.zerovue.executeJavaScript(`finalTest('hi again!')`)
-        // }, 5000)
+        ipc.send('get-os-app-path')
     }
 })
