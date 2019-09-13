@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ZeroVue</title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/css/uikit.min.css" />
+    <style>
+    body {
+        margin: 0;
+    }
+    .zerovue {
+        border:1pt solid #999;
+        display:inline-flex;
+        width:640px;
+        height:480px;
+    }
+    </style>
+</head>
+
+<body>
+
+<div id="app">
+    <div uk-grid class="uk-grid-column-collapse">
+        <div>
+            <button class="uk-button uk-button-primary uk-button-small" @click="home">
+                Home
+            </button>
+        </div>
+
+        <div class="uk-width-expand uk-margin-small-left uk-margin-small-right">
+            <input class="uk-input uk-form-small" type="text" placeholder="What next?">
+        </div>
+
+        <div>
+            <button class="uk-button uk-button-danger uk-button-small">GO</button>
+        </div>
+
+    </div>
+
+    <div align="center">
+        <small>{{navGreeting}}</small>
+    </div>
+
+    <div uk-grid>
+        <div uk-grid class="uk-width-expand">
+            <button class="uk-button uk-button-secondary uk-button-small uk-width-1-2" @click="openFile">
+                Open users.json
+            </button>
+            <button class="uk-button uk-button-secondary uk-button-small uk-width-1-2" @click="openFile">
+                Open sites.json
+            </button>
+        </div>
+    </div>
+
+    <!-- <webview id="foo" src="data:text/html,How much <strong>HTML</strong> can we fit in here, friend??" preload="preload.js" sandbox="true" class="zerovue"></webview> -->
+
+    <webview
+        :src="mySource"
+        :preload="preload"
+        sandbox="true"
+        class="zerovue">
+    </webview>
+
+</div>
+
+<!-- VueJS -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<!-- UIkit JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit-icons.min.js"></script>
+
+<!-- You can also require other files to run in this process -->
+<script src="./src/renderer.js"></script>
+
+</body>
+</html>

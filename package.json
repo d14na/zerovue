@@ -1,0 +1,15 @@
+{
+  "name": "zerovue",
+  "version": "19.9.12",
+  "author": "D14na Support <support@d14na.org>",
+  "description": "ZeroVue Rendering Engine for ZeroNet",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "devDependencies": {
+    "electron": "6.0.9"
+  }
+}
