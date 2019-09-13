@@ -53,8 +53,6 @@
         </div>
     </div>
 
-    <!-- <webview id="foo" src="data:text/html,How much <strong>HTML</strong> can we fit in here, friend??" preload="preload.js" sandbox="true" class="zerovue"></webview> -->
-
     <webview
         :src="mySource"
         :preload="preload"
@@ -66,13 +64,17 @@
 
 <!-- VueJS -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuex@3.1.1/dist/vuex.js"></script>
+<!-- We need lodash.merge so get lodash first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuex-persist"></script>
 
 <!-- UIkit JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit-icons.min.js"></script>
 
 <!-- You can also require other files to run in this process -->
-<script src="./src/renderer.js"></script>
+<script src="./renderer.js"></script>
 
 </body>
 </html>

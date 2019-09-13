@@ -1,5 +1,12 @@
-// All of the Node.js APIs are available in the preload process.
-// It has the same sandbox as a Chrome extension.
+/*******************************************************************************
+ *
+ * ZeroKit
+ * -------
+ *
+ * UI Rendering Engine for Zeronet
+ *
+ */
+
 window.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {

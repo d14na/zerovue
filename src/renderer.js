@@ -1,19 +1,12 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
-
 /* Initialize IPC. */
 const ipc = require('electron').ipcRenderer
+
+/* Initialize Vuex store. */
+const store = require('./store')
 
 /* Initialize VueJS application. */
 const app = new Vue({
     el: '#app',
-    // data: {
-    //     zerovue: null,
-    //     navGreeting: 'Welcome! This is an early preview of the ZeroVue Rendering Engine.',
-    //     mySource: '',
-    //     preload: 'file:'
-    // }
     data: () => ({
         zerovue: null,
         navGreeting: 'Welcome! This is an early preview of the ZeroVue Rendering Engine.',
@@ -35,6 +28,16 @@ const app = new Vue({
         }
     },
     mounted: function () {
+        console.log('STORE 1', store)
+        console.log(store.state.count)
+        store.dispatch('increment')
+        console.log(store.state.count)
+        store.dispatch('increment')
+        store.dispatch('increment')
+        console.log(store.state.count)
+        console.log('STORE 2', store)
+        console.log('STORE STATE', store.state)
+
         const fpath = require('path')
 
         const {app} = require('electron').remote
@@ -45,15 +48,12 @@ const app = new Vue({
 
         ipc.on('got-app-path', (event, path) => {
             console.log('PATH', path)
-            // const rootPath = path.slice(0, path.indexOf('node_modules'))
-            // console.log('ROOT PATH', rootPath)
 
             /* Insert pre-loaded script. */
-            // TODO This will be ZeroKit
             this.preload = fpath.join(
                 'file://',
                 path,
-                '/preload.js'
+                '/src/plugins/ZeroKit.js'
             )
 
             console.log('this.preload', this.preload)
