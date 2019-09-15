@@ -19,6 +19,17 @@ class ZeroKit {
         // setTimeout(() => {
         //     document.getElementById('testArea').innerHTML = document.getElementById('testArea').innerHTML + '<br />hi, i waited 3 seconds, now am here to preload'
         // }, 3000)
+
+        window.addEventListener(
+            "message",
+            event => {
+                console.log('EVENT', event)
+                if (event.origin === "file://" && event.source === window) {
+                    console.log('window.addEventListener', event.data)
+                }
+            },
+            false
+        )
     }
 
     classTest (_val) {

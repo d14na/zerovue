@@ -18,15 +18,30 @@ const ZeroVue = new Vue({
     },
     methods: {
         initHost () {
-            this.ZeroKit = document.querySelector('webview')
+            /* Initialize (webview) User Interface. */
+            this.UI = document.querySelector('webview')
 
-            this.ZeroKit.addEventListener('ipc-message', (event) => {
-                console.log(event.channel)
-                // Prints "pong"
+            /* Handle IPC Messages. */
+            // NOTE: This is how we receive our `postMessage` requests from UI
+            //       using the `ipcRenderer.sendToHost` method.
+            this.UI.addEventListener('ipc-message', (event) => {
+                /* Retrieve channel. */
+                const channel = event.channel
+
+                let message
+
+                try {
+                    message = JSON.parse(channel)
+                } catch (e) {
+                    // IGNORE ALL DECODING ERRORS
+                    // return console.error(e)
+                }
+
+                console.log('IPC Message', message)
             })
 
             /* Capture ALL console messages from SANDBOX. */
-            this.ZeroKit.addEventListener('console-message', function (e) {
+            this.UI.addEventListener('console-message', function (e) {
                 /* Parse source file. */
             	const srcFile = e.sourceId.replace(/^.*[\\\/]/, '')
 
@@ -40,16 +55,6 @@ const ZeroVue = new Vue({
                 /* Write to console. */
                 console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')
             })
-
-            const { ipcRenderer } = require('electron')
-
-            ipcRenderer.on('postMessage', (event, ...args) => {
-                console.log('HEY, WE JUST SAW A POSTMESSAGE')
-                // We received an event on the postMessage channel from
-                // the main process. Do a window.postMessage to forward it
-                // window.postMessage([], '*')
-            })
-
         },
         open (link) {
             this.$electron.shell.openExternal(link)
@@ -87,7 +92,7 @@ const ZeroVue = new Vue({
             this.preload = fpath.join(
                 'file://',
                 path,
-                '/src/plugins/ZeroKit/vue.js'
+                '/src/libs/ZeroKit/ui.js'
             )
 
             // console.log('this.preload', this.preload)
@@ -96,24 +101,22 @@ const ZeroVue = new Vue({
             this.mySource = `data:text/html,
 How much <strong>HTML</strong> can we fit in here??
 <div id="testArea"><!-- test area --></div>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="document.getElementById('testArea').innerHTML='<b>hi-there</b>'">Start Test</button>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.classTest('hi again!!')">Start ALERT Test</button>
 <br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testConnection()">Test Connection</button>
 <br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testPostMessage()">Test PostMessage</button>
 <style></style>
             `
         })
 
+        /* Handle DOM ready. */
         const domReady = () => {
-            console.log('domReady')
-
-            // console.log('this.ZeroKit', this.ZeroKit)
-            this.ZeroKit.send('ping')
-            // this.ZeroKit.executeJavaScript('zeroKit.initSandbox()')
+            // console.log('this.UI', this.UI)
+            this.UI.send('ping')
         }
 
-        this.ZeroKit.addEventListener('dom-ready', domReady)
+        /* Initialize DOM listener. */
+        this.UI.addEventListener('dom-ready', domReady)
 
+        /* Request OS application path. */
         ipc.send('get-os-app-path')
     }
 })
