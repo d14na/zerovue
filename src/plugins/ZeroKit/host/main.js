@@ -12,7 +12,7 @@ let conn = null
 const requestMgr = {}
 
 /* Initialize a manager to ZeroVue's (iframe). */
-const zerovue = $('#zerovue')
+// const zerovue = $('#zerovue')
 
 /* Initialize the ZeroVue content window. */
 // FIXME: Add error checking.

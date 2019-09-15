@@ -403,19 +403,3 @@ window.addEventListener('message', async function (_event) {
 const _zerovueMsg = function (_message = {}) {
     contentWindow.postMessage(_message, '*')
 }
-
-/**
- * Authorize Gatekeeper
- */
-const _authGatekeeper = async function () {
-    /* Show "connecting.." notification. */
-    await _wait('Starting New Session', 'This will only take a moment.', 'Please wait..')
-
-    /* Validate application initialization. */
-    if (!gateReady) {
-        setTimeout(function () {
-            /* Send empty message to the zerovue for initialization. */
-            _zerovueMsg()
-        }, 1000)
-    }
-}

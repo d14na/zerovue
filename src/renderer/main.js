@@ -17,8 +17,13 @@ const ZeroVue = new Vue({
         //
     },
     methods: {
-        initZeroKit () {
+        initHost () {
             this.ZeroKit = document.querySelector('webview')
+
+            this.ZeroKit.addEventListener('ipc-message', (event) => {
+                console.log(event.channel)
+                // Prints "pong"
+            })
 
             /* Capture ALL console messages from SANDBOX. */
             this.ZeroKit.addEventListener('console-message', function (e) {
@@ -35,6 +40,16 @@ const ZeroVue = new Vue({
                 /* Write to console. */
                 console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')
             })
+
+            const { ipcRenderer } = require('electron')
+
+            ipcRenderer.on('postMessage', (event, ...args) => {
+                console.log('HEY, WE JUST SAW A POSTMESSAGE')
+                // We received an event on the postMessage channel from
+                // the main process. Do a window.postMessage to forward it
+                // window.postMessage([], '*')
+            })
+
         },
         open (link) {
             this.$electron.shell.openExternal(link)
@@ -46,7 +61,7 @@ const ZeroVue = new Vue({
             ipc.send('open-file-dialog')
         },
         firstTest () {
-            const ZeroKit = require(__dirname + '/plugins/ZeroKit').module
+            const ZeroKit = require(__dirname + '/plugins/ZeroKit/host').module
             // console.log('ZeroKit', ZeroKit)
 
             /* Initialize new ZeroKit. */
@@ -56,8 +71,8 @@ const ZeroVue = new Vue({
         }
     },
     mounted: function () {
-        /* Initialize ZeroKit. */
-        this.initZeroKit()
+        /* Initialize ZeroKit (from HOST). */
+        this.initHost()
 
         app.on('start_debugger', function (event) {
         // app.on('start_debugger', function (event) {
@@ -72,7 +87,7 @@ const ZeroVue = new Vue({
             this.preload = fpath.join(
                 'file://',
                 path,
-                '/src/plugins/ZeroKit.js'
+                '/src/plugins/ZeroKit/vue.js'
             )
 
             // console.log('this.preload', this.preload)
@@ -81,28 +96,23 @@ const ZeroVue = new Vue({
             this.mySource = `data:text/html,
 How much <strong>HTML</strong> can we fit in here??
 <div id="testArea"><!-- test area --></div>
-<button class="uk-button uk-button-danger uk-button-small" onclick="document.getElementById('testArea').innerHTML='<b>hi-there</b>'">Start Test</button>
-<button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.classTest('hi again!!')">Start ALERT Test</button>
-<button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testConnection()">Test Connection</button>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="document.getElementById('testArea').innerHTML='<b>hi-there</b>'">Start Test</button>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.classTest('hi again!!')">Start ALERT Test</button>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testConnection()">Test Connection</button>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testPostMessage()">Test PostMessage</button>
 <style></style>
             `
         })
 
-        // console.log('this.zerovue', this.zerovue)
-        // const indicator = document.querySelector('.indicator')
+        const domReady = () => {
+            console.log('domReady')
 
-        // const loadstart = () => {
-        //     console.log('loadstart')
-        //     // indicator.innerText = 'loading...'
-        // }
+            // console.log('this.ZeroKit', this.ZeroKit)
+            this.ZeroKit.send('ping')
+            // this.ZeroKit.executeJavaScript('zeroKit.initSandbox()')
+        }
 
-        // const loadstop = () => {
-        //     console.log('loadstop')
-        //     // indicator.innerText = ''
-        // }
-
-        // this.zerovue.addEventListener('did-start-loading', loadstart)
-        // this.zerovue.addEventListener('did-stop-loading', loadstop)
+        this.ZeroKit.addEventListener('dom-ready', domReady)
 
         ipc.send('get-os-app-path')
     }

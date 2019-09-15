@@ -66,4 +66,7 @@ ipcMain.on('open-file-dialog', function (event) {
 })
 
 /* Initialize menu. */
-require('./src/menu')
+require('./src/_menu')
+
+/* Initialize modals. */
+require('./src/_modals')
