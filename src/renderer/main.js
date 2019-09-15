@@ -8,7 +8,7 @@ const store = require('./store')
 const ZeroVue = new Vue({
     el: '#app',
     data: () => ({
-        ZeroKit: null,
+        zeroKit: null,
         navGreeting: 'Welcome! This is an early preview of the ZeroVue Rendering Engine.',
         mySource: '',
         preload: 'file:'
@@ -18,6 +18,9 @@ const ZeroVue = new Vue({
     },
     methods: {
         initHost () {
+            const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
+            this.zeroKit = new ZeroKit()
+
             /* Initialize (webview) User Interface. */
             this.UI = document.querySelector('webview')
 
@@ -28,16 +31,24 @@ const ZeroVue = new Vue({
                 /* Retrieve channel. */
                 const channel = event.channel
 
-                let message
+                let pkg
 
                 try {
-                    message = JSON.parse(channel)
+                    pkg = JSON.parse(channel)
+
+                    console.log('IPC Package', pkg)
+
+                    const action = pkg.action
+
+                    switch(action) {
+                    case 'testConnection':
+                        console.log('TESTING CONNECTION')
+                        this.zeroKit.testConnection()
+                    }
                 } catch (e) {
                     // IGNORE ALL DECODING ERRORS
                     // return console.error(e)
                 }
-
-                console.log('IPC Message', message)
             })
 
             /* Capture ALL console messages from SANDBOX. */
@@ -65,14 +76,14 @@ const ZeroVue = new Vue({
         openFile () {
             ipc.send('open-file-dialog')
         },
-        firstTest () {
-            const ZeroKit = require(__dirname + '/plugins/ZeroKit/host').module
+        search () {
+            // const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
             // console.log('ZeroKit', ZeroKit)
 
             /* Initialize new ZeroKit. */
-            const zeroKit = new ZeroKit()
+            // const zeroKit = new ZeroKit()
 
-            zeroKit.classTest('This is a `firstTest` from classTest!')
+            this.zeroKit.search('i am looking for something SMPL')
         }
     },
     mounted: function () {
@@ -92,7 +103,7 @@ const ZeroVue = new Vue({
             this.preload = fpath.join(
                 'file://',
                 path,
-                '/src/libs/ZeroKit/ui.js'
+                '/libs/ZeroKit/ui.js'
             )
 
             // console.log('this.preload', this.preload)
@@ -101,16 +112,20 @@ const ZeroVue = new Vue({
             this.mySource = `data:text/html,
 How much <strong>HTML</strong> can we fit in here??
 <div id="testArea"><!-- test area --></div>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testConnection()">Test Connection</button>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="zeroKit.testPostMessage()">Test PostMessage</button>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testConnection()">Test Connection</button>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testPostMessage()">Test PostMessage</button>
 <style></style>
             `
         })
 
         /* Handle DOM ready. */
         const domReady = () => {
-            // console.log('this.UI', this.UI)
-            this.UI.send('ping')
+            /* Send (via ipcRenderer listener). */
+            // this.UI.send('ping')
+            this.UI.send('message', 'btw, the DOM is ready to go!!')
+
+            /* Send (via native Js). */
+            this.UI.executeJavaScript('_0.domReady()')
         }
 
         /* Initialize DOM listener. */
