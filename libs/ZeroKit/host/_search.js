@@ -12,10 +12,10 @@ const _search = async function (_query) {
     /* Set query. */
     const query = _query
 
-    _addLog(`Searching for [ ${query} ]`)
+    this.addLog(`Searching for [ ${query} ]`)
 
     /* Show "connecting.." notification. */
-    await _wait('Peer-to-Peer Search', `Processing request for<br />[ <strong class="text-primary">${query}</strong> ]`, 'Please wait..')
+    await wait('Peer-to-Peer Search', `Processing request for<br />[ <strong class="text-primary">${query}</strong> ]`, 'Please wait..')
 
     /* Initialize (data) managers. */
     let action = null
@@ -34,7 +34,7 @@ const _search = async function (_query) {
     /* Validate search query. */
     if (query.slice(0, 10).toUpperCase() === 'DEBUG.MENU') {
         /* Clear open modals. */
-        _clearModals()
+        this.clearModals()
 
         /* Show ADMIN permission modal. */
         $('#modalDebug').modal({
@@ -116,7 +116,7 @@ const _search = async function (_query) {
     }
 
     /* Send package. */
-    if (_sendSupeerMessage(pkg)) {
+    if (this.message.send(pkg)) {
         /* Reset search. */
         App._resetSearch()
     }

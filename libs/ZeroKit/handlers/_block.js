@@ -36,8 +36,8 @@ const _handleBlock = function (_data) {
         _dbWrite(dbName, dataId, data)
 
         /* Clear modals. */
-        _clearModals()
+        this.clearModals()
     } else {
-        _alert('Verification Failed', 'Block data verification FAILED!.')
+        this.alert('Verification Failed', 'Block data verification FAILED!.')
     }
 }

@@ -39,7 +39,7 @@ _dbManager['blocks'] = new PouchDB('blocks')
  * Save data to one of the managed PouchDb databases.
  */
 const _dbWrite = async function (_dbName, _dataId, _data) {
-    _addLog(`Writing ${_dataId} to ${_dbName}`)
+    this.addLog(`Writing ${_dataId} to ${_dbName}`)
 
     /* Verify config in cache. */
     const exists = await _dbRead(_dbName, _dataId)
@@ -89,7 +89,7 @@ const _dbWrite = async function (_dbName, _dataId, _data) {
 
     /* Add/update document in database. */
     result = await _dbManager[_dbName].put(pkg)
-        .catch(_errorHandler)
+        .catch(errorHandler)
 
     /* Return the result. */
     if (result) {
@@ -104,7 +104,7 @@ const _dbWrite = async function (_dbName, _dataId, _data) {
  * Read data from one of the managed PouchDb databases.
  */
 const _dbRead = async function (_dbName, _dataId, _query = null) {
-    // _addLog(`Reading ${_dataId} from ${_dbName}`)
+    // this.addLog(`Reading ${_dataId} from ${_dbName}`)
 
     /* Initialize options. */
     const options = {
@@ -115,7 +115,7 @@ const _dbRead = async function (_dbName, _dataId, _query = null) {
 
     /* Retrieve all docs (using `key` filter). */
     const docs = await _dbManager[_dbName].allDocs(options)
-        .catch(_errorHandler)
+        .catch(errorHandler)
 
     /* Validate docs. */
     if (docs && docs['rows'].length) {
@@ -136,7 +136,7 @@ const _dbRead = async function (_dbName, _dataId, _query = null) {
  * Delete data from one of the managed PouchDb databases.
  */
 const _dbDelete = async function (_dbName, _dataId) {
-    _addLog(`Deleting ${_dataId} from ${_dbName}`)
+    this.addLog(`Deleting ${_dataId} from ${_dbName}`)
 
     /* Verify config in cache. */
     const exists = await _dbRead(_dbName, _dataId)
@@ -147,9 +147,9 @@ const _dbDelete = async function (_dbName, _dataId) {
     if (exists && exists._id === _dataId) {
         /* Remove document from database. */
         result = await _dbManager[_dbName].remove(exists)
-            .catch(_errorHandler)
+            .catch(errorHandler)
     } else {
-        return _errorHandler('File was NOT found.', false)
+        return errorHandler('File was NOT found.', false)
     }
 
     /* Return the result. */

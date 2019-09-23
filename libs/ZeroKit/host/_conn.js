@@ -1,13 +1,3 @@
-/*******************************************************************************
-
-  SockJS
-  https://github.com/sockjs/sockjs-client
-
-  We are using SockJS to manage all socket communications.
-
-*******************************************************************************/
-
-
 /**
  * Websocket Connect
  *
@@ -17,70 +7,28 @@
  * NOTE The closest (available) server can be reached by querying the DNS list:
  *      https://supeer.network
  */
-const _connect = async function () {
-    /* Verify that we are NOT already connected. */
-    if (!conn || conn.readyState !== 1) {
-        /* Show "connecting.." notification. */
-        await _wait('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
+const connect = async function (_endpoint) {
+    /* Show "connecting.." notification. */
+    await this.wait('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
+    // await _app.wait('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
 
-        /* Create a new Socket JS connection . */
-        conn = new SockJS(WS_ENDPOINT)
+    /* Create a new Socket JS connection . */
+    this.conn.socket = new SockJS(_endpoint)
 
-        /* Initialize event handlers. */
-        conn.onopen = _connOpen
-        conn.onmessage = _connMessage
-        conn.onclose = _connClose
-    }
-}
-
-/**
- * Send Supeer Message
- */
-const _sendSupeerMessage = function (_msg) {
-    if (conn && conn.readyState === 1) {
-        /* Increment request id. */
-        // NOTE An Id of (0) will return FALSE on validation
-        requestId++
-
-        /* Add new request id to message. */
-        const msg = {
-            requestId,
-            ..._msg
-        }
-
-        /* Add new request to requests manager. */
-        requestMgr[requestId] = msg
-
-        /* Send serialized message. */
-        conn.send(JSON.stringify(msg))
-
-        return true
-    } else {
-        _addLog(`Attempting to reconnect..`)
-
-        // FIXME Set a maximum attempts to avoid infinite loop.
-
-        /* Attempt to re-connect. */
-        _connect()
-
-        /* Wait a few secs, then attempt to re-connect. */
-        setTimeout(() => {
-            // /* Attempt to re-connect. */
-            // _connect()
-            /* Attempt to re-send. */
-            _sendSupeerMessage(_msg)
-        }, 3000)
-    }
+    /* Initialize event handlers. */
+    this.conn.socket.onopen = _connOpen.bind(this)
+    this.conn.socket.onmessage = _connMessage.bind(this)
+    this.conn.socket.onclose = _connClose.bind(this)
 }
 
 /**
  * Websocket - Connection Opened
  */
 const _connOpen = async function () {
-    _addLog('Supeer connected successfully.')
+    this.addLog('Supeer connected successfully.')
 
     /* Update connection status (display). */
-    App._setConnStatus('Supeer Connected', 'text-success')
+    // App._setConnStatus('Supeer Connected', 'text-success')
 
     /* Set action. */
     const action = 'WHOAMI'
@@ -89,7 +37,7 @@ const _connOpen = async function () {
     const pkg = { action }
 
     /* Send package. */
-    _sendSupeerMessage(pkg)
+    this.message.send(pkg)
 }
 
 /**
@@ -98,8 +46,8 @@ const _connOpen = async function () {
 const _connMessage = function (_event) {
     // console.info('Incoming Supeer message', _event.data)
 
-    /* Handle incoming Supeer message. */
-    _handleSupeerMessage(_event.data)
+    /* Handle incoming (Supeer) message. */
+    this.handleMessage(_event.data)
 }
 
 /**
@@ -110,4 +58,8 @@ const _connClose = function () {
 
     /* Update connection status (display). */
     App._setConnStatus('Supeer Disconnected', 'text-danger')
+}
+
+module.exports = {
+    connect
 }

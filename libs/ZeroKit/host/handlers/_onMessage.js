@@ -8,7 +8,7 @@
  * have to be careful about accepting data via the messaging API we've
  * created. We verify the source, and validate ALL inputs.
  */
-window.addEventListener('message', async function (_event) {
+const handler = async function (_event) {
     // console.log('INCOMING MESSAGE EVENT', _event)
 
     /* Retrieve origin. */
@@ -28,13 +28,13 @@ window.addEventListener('message', async function (_event) {
         if (data) {
             /* Handle any errors. */
             if (data.error) {
-                return _addLog(`Oops! We have a problem.\n\n${data.msg}`)
+                return this.addLog(`Oops! We have a problem.\n\n${data.msg}`)
             }
 
             /* Handle any Api commands. */
             if (data.cmd && data.params) {
                 /* Log all successful messages to console. */
-                // _addLog(`${data.cmd} : ${data.params}`)
+                // this.addLog(`${data.cmd} : ${data.params}`)
 
                 /* Initialize command. */
                 let cmd = null
@@ -47,7 +47,7 @@ window.addEventListener('message', async function (_event) {
 
                 switch(data.cmd.toUpperCase()) {
                 case 'FILEGET':
-                    _addLog('Received [ fileGet ]. Sending [ fileData ]')
+                    this.addLog('Received [ fileGet ]. Sending [ fileData ]')
 
                     /* Initialize file data holder. */
                     let fileData = null
@@ -99,7 +99,7 @@ window.addEventListener('message', async function (_event) {
                 case 'DBGET':
                     console.log('DB GET', data.params)
 
-                    _addLog('Received [ dbGet ]. Sending [ sample movies ]')
+                    this.addLog('Received [ dbGet ]. Sending [ sample movies ]')
 
                     break
 
@@ -131,7 +131,7 @@ window.addEventListener('message', async function (_event) {
                         // _zerovueMsg({ body })
                     })
 
-                    _addLog('Received [ dbQuery ]. Sending [ map/reduce data ]')
+                    this.addLog('Received [ dbQuery ]. Sending [ map/reduce data ]')
 
                     const stdMapping = {
                         map: (_doc) => {
@@ -231,7 +231,7 @@ window.addEventListener('message', async function (_event) {
                     return _zerovueMsg({ cmd, to, result })
 
                 case 'INNERREADY':
-                    _addLog('Received [ innerReady ]. Sending [ wrapperOpenedWebsocket ]')
+                    this.addLog('Received [ innerReady ]. Sending [ wrapperOpenedWebsocket ]')
 
                     return _zerovueMsg({
                         cmd: 'wrapperOpenedWebsocket',
@@ -240,7 +240,7 @@ window.addEventListener('message', async function (_event) {
                     })
 
                 case 'SERVERINFO':
-                    _addLog('Received [ serverInfo ]. Sending [ Supeer sample ]')
+                    this.addLog('Received [ serverInfo ]. Sending [ Supeer sample ]')
 
                     cmd = 'response'
 
@@ -291,7 +291,7 @@ window.addEventListener('message', async function (_event) {
                     return _zerovueMsg({ cmd, to, result })
 
                 case 'SITEINFO':
-                    _addLog('Received [ siteInfo ]. Sending [ ZeroCoding sample ]')
+                    this.addLog('Received [ siteInfo ]. Sending [ ZeroCoding sample ]')
 
                     cmd = 'response'
 
@@ -331,7 +331,7 @@ window.addEventListener('message', async function (_event) {
                     return _zerovueMsg({ cmd, to, result })
 
                 case 'WRAPPERGETLOCALSTORAGE':
-                    _addLog('Received [ wrapperGetLocalStorage ]. Sending [ null ]')
+                    this.addLog('Received [ wrapperGetLocalStorage ]. Sending [ null ]')
 
                     cmd = 'response'
 
@@ -353,7 +353,7 @@ window.addEventListener('message', async function (_event) {
                     return _zerovueMsg({ cmd, to, result })
 
                 case 'WRAPPERGETSTATE':
-                    _addLog('Received [ wrapperGetState ]. Sending [ null ]')
+                    this.addLog('Received [ wrapperGetState ]. Sending [ null ]')
 
                     cmd = 'response'
 
@@ -371,7 +371,7 @@ window.addEventListener('message', async function (_event) {
             /* Verify we have a successful message. */
             if (data.success) {
                 /* Log all successful messages to console. */
-                _addLog(data.msg)
+                this.addLog(data.msg)
 
                 /* Validate Iframe authorization. */
                 if (data.msg === 'GATEKEEPER_IS_READY') {
@@ -384,13 +384,13 @@ window.addEventListener('message', async function (_event) {
             }
         } else {
             /* Report any communications error. */
-            _addLog('Oops! Something went wrong.' +
+            this.addLog('Oops! Something went wrong.' +
                   'We DID NOT receive the data we were looking for. ' +
                   'What we did receive was:<br /><br />' +
                   JSON.stringify(data))
         }
     }
-})
+}
 
 /**
  * Send Gateway Message
@@ -400,6 +400,8 @@ window.addEventListener('message', async function (_event) {
  * don't have an origin which we can target.
  * (this might allow some "zero-day-style" esoteric attacks)
  */
-const _zerovueMsg = function (_message = {}) {
-    contentWindow.postMessage(_message, '*')
-}
+// const _zerovueMsg = function (_message = {}) {
+//     contentWindow.postMessage(_message, '*')
+// }
+
+module.exports = handler

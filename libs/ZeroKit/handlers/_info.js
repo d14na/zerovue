@@ -12,7 +12,7 @@ const _handleInfo = async function (_data) {
 
     /* Validate metadata. */
     if (!metadata) {
-        return _errorHandler(
+        return errorHandler(
             `Oops! No torrent info found in [ ${JSON.stringify(_data.info)} ]`, false)
     }
 
@@ -22,9 +22,9 @@ const _handleInfo = async function (_data) {
 
     /* Verify torrent info. */
     if (torrentInfo) {
-        _addLog(`[ ${infoHash} ] METADATA was verified successfully!`)
+        this.addLog(`[ ${infoHash} ] METADATA was verified successfully!`)
     } else {
-        return _errorHandler(
+        return errorHandler(
             `Oops! Torrent metadata FAILED verification [ ${JSON.stringify(_data.info)} ]`, false)
     }
 
@@ -111,21 +111,21 @@ const _handleInfo = async function (_data) {
         // const action = 'GET'
         // let dataId = '01c227c8c9aac311f9365b163ea94708c27a7db4:0'
         // pkg = { action, dataId }
-        // if(_sendSupeerMessage(pkg)) {
+        // if(this.message.send(pkg)) {
         //     console.log(`Send request for [ ${dataId} ]`)
         // }
         // dataId = '01c227c8c9aac311f9365b163ea94708c27a7db4:1'
         // pkg = { action, dataId }
-        // if(_sendSupeerMessage(pkg)) {
+        // if(this.message.send(pkg)) {
         //     console.log(`Send request for [ ${dataId} ]`)
         // }
         // dataId = '01c227c8c9aac311f9365b163ea94708c27a7db4:2'
         // pkg = { action, dataId }
-        // if(_sendSupeerMessage(pkg)) {
+        // if(this.message.send(pkg)) {
         //     console.log(`Send request for [ ${dataId} ]`)
         // }
     }
 
     /* Clear modals. */
-    _clearModals()
+    this.clearModals()
 }

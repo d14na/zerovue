@@ -8,9 +8,17 @@ const store = require('./store')
 const ZeroVue = new Vue({
     el: '#app',
     data: () => ({
+        /* ZeroKit */
         zeroKit: null,
+
+        /* Greeting */
+        // TODO Add translations for this opening message.
         navGreeting: 'Welcome! This is an early preview of the ZeroVue Rendering Engine.',
+
+        /* Webview Source */
         mySource: '',
+
+        /* Webview Preload (Script) */
         preload: 'file:'
     }),
     computed: {
@@ -18,11 +26,35 @@ const ZeroVue = new Vue({
     },
     methods: {
         initHost () {
+            /* Require ZeroKit. */
             const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
+
+            /* Initialize ZeroKit. */
             this.zeroKit = new ZeroKit()
 
+            this.zeroKit.postMessage = (_pkg) => {
+                // console.log('send to UI', _pkg)
+                this.UI.send('message', JSON.stringify(_pkg))
+            }
+        },
+
+        initUI () {
             /* Initialize (webview) User Interface. */
             this.UI = document.querySelector('webview')
+
+            /* Handle DOM ready. */
+            const _domReady = () => {
+                /* Send (via ipcRenderer listener). */
+                // this.UI.send('ping')
+                this.UI.send('message', 'btw, the DOM is ready to go!!')
+
+                /* Send (via native Js). */
+                this.UI.executeJavaScript('_0.domReady()')
+            }
+
+            /* Initialize DOM listener. */
+            // NOTE: This lets us know as soon as the UI DOM is ready.
+            this.UI.addEventListener('dom-ready', _domReady)
 
             /* Handle IPC Messages. */
             // NOTE: This is how we receive our `postMessage` requests from UI
@@ -42,8 +74,11 @@ const ZeroVue = new Vue({
 
                     switch(action) {
                     case 'testConnection':
-                        console.log('TESTING CONNECTION')
                         this.zeroKit.testConnection()
+                        break
+                    case 'testD14naIndex':
+                        this.zeroKit.testD14naIndex()
+                        break
                     }
                 } catch (e) {
                     // IGNORE ALL DECODING ERRORS
@@ -67,6 +102,7 @@ const ZeroVue = new Vue({
                 console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')
             })
         },
+
         open (link) {
             this.$electron.shell.openExternal(link)
         },
@@ -90,6 +126,9 @@ const ZeroVue = new Vue({
         /* Initialize ZeroKit (from HOST). */
         this.initHost()
 
+        /* Initialize ZeroKit (from UI). */
+        this.initUI()
+
         app.on('start_debugger', function (event) {
         // app.on('start_debugger', function (event) {
             console.log('HOME wants to start the debugger')
@@ -112,24 +151,12 @@ const ZeroVue = new Vue({
             this.mySource = `data:text/html,
 How much <strong>HTML</strong> can we fit in here??
 <div id="testArea"><!-- test area --></div>
+<br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testD14naIndex()">Test D14na Index</button>
 <br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testConnection()">Test Connection</button>
 <br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testPostMessage()">Test PostMessage</button>
 <style></style>
             `
         })
-
-        /* Handle DOM ready. */
-        const domReady = () => {
-            /* Send (via ipcRenderer listener). */
-            // this.UI.send('ping')
-            this.UI.send('message', 'btw, the DOM is ready to go!!')
-
-            /* Send (via native Js). */
-            this.UI.executeJavaScript('_0.domReady()')
-        }
-
-        /* Initialize DOM listener. */
-        this.UI.addEventListener('dom-ready', domReady)
 
         /* Request OS application path. */
         ipc.send('get-os-app-path')

@@ -1,7 +1,7 @@
 /**
- * Handle WHOAMI
+ * WHOAMI Request Handler
  */
-const _handleWhoAmI = function (_data) {
+const handler = function (_data) {
     /* Retrieve the identity. */
     const identity = _data.identity
 
@@ -21,23 +21,25 @@ const _handleWhoAmI = function (_data) {
     const address = `${ip}:${port}`
 
     /* Authorize connection. */
-    _authRequest(address)
+    this.authRequest(address)
 
     /* Initialize verification. */
     let verification = null
 
-    if (identity === _calcIdentity(address)) {
+    if (identity === this.calcIdentity(address)) {
         verification = 'VERIFIED'
 
         /* Set network identity. */
         const networkIdentity = `${ip} &bullet; ${city}, ${country}`
 
         /* Set identity (display). */
-        App._setIdentity(networkIdentity)
+        // App._setIdentity(networkIdentity)
     } else {
-        return _alert('Peer Id verificatino FAILED!')
+        return this.alert('Peer Id verificatino FAILED!')
     }
 
     /* Clear modals. */
-    _clearModals()
+    // this.clearModals()
 }
+
+module.exports = handler

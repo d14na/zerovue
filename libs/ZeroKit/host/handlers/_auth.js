@@ -1,7 +1,8 @@
 /**
  * Handle 0NET Authorization
  */
-const _handleAuth = function (_data) {
+const handler = function (_data) {
+    console.log('HANDLING AUTH', _data);
     /* Validate data. */
     if (!_data || !_data.account) {
         return null
@@ -22,9 +23,11 @@ const _handleAuth = function (_data) {
         pkg = { body, prepend: true }
 
         /* Send package to zerovue. */
-        _zerovueMsg(pkg)
+        this.postMessage(pkg)
     }
 
     /* Clear modals. */
-    _clearModals()
+    this.clearModals()
 }
+
+module.exports = handler

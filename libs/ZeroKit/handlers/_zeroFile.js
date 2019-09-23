@@ -26,7 +26,7 @@ const _handleZeroFile = async function (_data) {
 
         /* Re-validate config. */
         if (!config || !config.data) {
-            return _addLog('No config found in Zite Manager.')
+            return this.addLog('No config found in Zite Manager.')
         } else {
             config = config.data
 
@@ -46,7 +46,7 @@ const _handleZeroFile = async function (_data) {
 
     /* Validate inner path. */
     if (!innerPath) {
-        return _addLog(`Problem retrieving inner path [ ${innerPath} ]`)
+        return this.addLog(`Problem retrieving inner path [ ${innerPath} ]`)
     }
 
     /* Initialize file data. */

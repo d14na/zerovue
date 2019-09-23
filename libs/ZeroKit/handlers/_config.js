@@ -35,7 +35,7 @@ const _handleConfig = async function (_data) {
     /* Validate config. */
     if (!config) {
         /* Show alert. */
-        return _alert(
+        return this.alert(
             'Oops! Download Error!',
             'Failed to download zite configuration.',
             'Please try your request again..',
@@ -51,7 +51,7 @@ const _handleConfig = async function (_data) {
     /* Validate signature. */
     if (!isSignatureValid) {
         /* Show alert. */
-        return _alert(
+        return this.alert(
             'Oops! Validation Error!',
             'Failed to validate zite configuration file.',
             'Please try your request again..',
@@ -82,12 +82,12 @@ const _handleConfig = async function (_data) {
     }
 
     if (savedConfig && modified > savedConfig.modified) {
-        _addLog('Zite update is available.')
+        this.addLog('Zite update is available.')
 
         let calcDiff = moment.unix(modified).diff(
             moment.unix(savedConfig.modified), 'hours', true)
 
-        _alert(
+        this.alert(
             'Zite Update Available',
             'Would you like to download the latest zite now?',
             `Last updated: ${calcDiff} hours ago.`,
@@ -100,23 +100,23 @@ const _handleConfig = async function (_data) {
         console.error('MADE THE UPDATE, NOW CONTINUING EXECUTION')
         // return console.error('MADE THE UPDATE, THEN STOPPED EXECUTION -- PLEASE REFRESH')
     } else if (savedConfig && modified < savedConfig.modified) {
-        _addLog('OLD CONFIG FILE -- IGNORED.')
+        this.addLog('OLD CONFIG FILE -- IGNORED.')
 
         /* Run HTML body builder. */
         _bodyBuilder(App.destination, config)
 
         // return
     } else if (savedConfig && modified === savedConfig.modified) {
-        _addLog('Zite configuration file is current.')
+        this.addLog('Zite configuration file is current.')
 
         /* Run HTML body builder. */
         _bodyBuilder(App.destination, config)
 
         // return
     } else {
-        _addLog('New zite added!')
+        this.addLog('New zite added!')
 
-        _alert(
+        this.alert(
             'Add New Zite',
             'Would you like to add this zite to your gallery?',
             `[ ${App.destination} ]`,

@@ -1,34 +1,6 @@
 // FIXME Work on localizing ALL of the global variables
 //       initialized below INTO the vue app manager.
 
-/* Initialize constants. */
-const WS_ENDPOINT = 'https://supeer.host' // WebSockets endpoint
-const INFURA_API_KEY = '61a2428e6a4e41a695d876dfac323f0f' // Infura API key
-
-/* Initialize connection manager. */
-let conn = null
-
-/* Initialize requests manager. */
-const requestMgr = {}
-
-/* Initialize a manager to ZeroVue's (iframe). */
-// const zerovue = $('#zerovue')
-
-/* Initialize the ZeroVue content window. */
-// FIXME: Add error checking.
-const contentWindow = zerovue[0].contentWindow
-
-/* Initialize Gatekeeper's Ready flag. */
-let gateReady = false
-
-/* Initialize Request Id. */
-let requestId = 0
-
-/* Initialize global client details. */
-let peerId = null
-let account = null
-let identity = null
-
 /**
  * Vue Application Manager
  */
@@ -53,9 +25,6 @@ const vueAppManager = {
 
         /* Search */
         query: null,
-
-        /* Messaging */
-        msgList: [],
 
         /* Profile */
         profile: {},
@@ -100,7 +69,7 @@ const vueAppManager = {
                 /* Hide ALL modal windows. */
                 if (e.keyCode === 27) {
                     /* Clear modals. */
-                    _clearModals(0)
+                    this.clearModals(0)
                 }
             })
 
@@ -256,7 +225,7 @@ const vueAppManager = {
         },
         search: function () {
             if (!this.query) {
-                return _alert('Search Error', 'Please enter the REQUEST you desdire.')
+                return this.alert('Search Error', 'Please enter the REQUEST you desdire.')
             }
 
             /* Call search library. */

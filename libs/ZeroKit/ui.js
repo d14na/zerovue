@@ -24,15 +24,17 @@ ipcRenderer.on('ping', () => {
     ipcRenderer.sendToHost('pong')
 })
 
-/* Handle incoming HOST message. */
+/* Handle incoming HOST Post Message. */
 ipcRenderer.on('message', (event, message) => {
-    console.log(`ipcRenderer: Incoming Message [${JSON.stringify(message)}]!`)
+    console.log(`ipcRenderer: Incoming Post Message [ ${JSON.stringify(message)} ]`)
+
+    // TODO Handle incoming message
 })
 
 /*******************************************************************************
  *
  * ZeroKit (Guest)
- * -------
+ * ---------------
  *
  * UI Rendering Engine for Zeronet
  *
@@ -57,13 +59,24 @@ class ZeroKit {
     }
 
     testConnection () {
-        console.log('UI WANTS TO START TESTING NOW!!')
+        /* Set action. */
+        const action = 'testConnection'
 
-        const pkg = {
-            action: 'testConnection'
-        }
+        /* Build package. */
+        const pkg = { action }
 
-        /* Send pong to host. */
+        /* Send message to host. */
+        ipcRenderer.sendToHost(JSON.stringify(pkg))
+    }
+
+    testD14naIndex () {
+        /* Set action. */
+        const action = 'testD14naIndex'
+
+        /* Build package. */
+        const pkg = { action }
+
+        /* Send message to host. */
         ipcRenderer.sendToHost(JSON.stringify(pkg))
     }
 

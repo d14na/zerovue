@@ -17,5 +17,5 @@ const _handleSearch = function (_data) {
     _zerovueMsg(pkg)
 
     /* Clear modals. */
-    _clearModals()
+    this.clearModals()
 }

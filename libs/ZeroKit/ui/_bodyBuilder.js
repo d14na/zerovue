@@ -312,7 +312,7 @@ const _bodyBuilder = function (_dest, _config) {
         }
 
         /* Clear modals. */
-        _clearModals()
+        this.clearModals()
     } else {
         /* Set num files required. */
         const numRequired = Object.keys(_config.files).length
