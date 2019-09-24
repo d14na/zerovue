@@ -57,7 +57,7 @@ const _connClose = function () {
     console.info('Supeer connection closed.')
 
     /* Update connection status (display). */
-    App._setConnStatus('Supeer Disconnected', 'text-danger')
+    // App._setConnStatus('Supeer Disconnected', 'text-danger')
 }
 
 module.exports = {

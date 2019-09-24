@@ -2,7 +2,7 @@
   "name": "zerovue",
   "version": "19.9.12",
   "author": "D14na Support <support@d14na.org>",
-  "description": "ZeroVue Rendering Engine for ZeroNet",
+  "description": "ZeroVue - Lite Client for Zeronet",
   "license": "MIT",
   "main": "main.js",
   "scripts": {

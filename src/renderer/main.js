@@ -19,10 +19,46 @@ const ZeroVue = new Vue({
         mySource: '',
 
         /* Webview Preload (Script) */
-        preload: 'file:'
+        preload: 'file:',
+
+        /* System */
+        // logMgr: [],
+
+        /* Constants */
+        // BLOCK_HASH_LENGTH: 20,
+        // CHUNK_LENGTH: 16384,
+
+        /* Device Status */
+        // storageUsed: null,
+        // storageQuota: null,
+
+        /* Network Status */
+        // networkIdentity: null,
+        // networkStatus: null,
+        // networkStatusClass: null,
+
+        /* Search */
+        // query: null,
+
+        /* Profile */
+        // profile: {},
+
+        /* Zeronet Zite Manager */
+        // ziteMgr: {},
+        // destination: null,
+
+        /* Torrent Manager */
+        // torrentMgr: {}
+
     }),
     computed: {
-        //
+        // msgIndicator: function () {
+        //     if (this.msgList.length) {
+        //         return true
+        //     } else {
+        //         return false
+        //     }
+        // }
     },
     methods: {
         initHost () {
@@ -76,8 +112,15 @@ const ZeroVue = new Vue({
                     case 'testConnection':
                         this.zeroKit.testConnection()
                         break
+                    case 'updateMySource':
+                        const body = pkg.body
+                        console.log('received body', body)
+
+                        this.updateMySource(body)
+                        break
                     case 'testD14naIndex':
-                        this.zeroKit.testD14naIndex()
+                        this.updateMySource(`Who said you could change this?`)
+                        // this.zeroKit.testD14naIndex()
                         break
                     }
                 } catch (e) {
@@ -106,12 +149,19 @@ const ZeroVue = new Vue({
         open (link) {
             this.$electron.shell.openExternal(link)
         },
+
+        updateMySource (_source) {
+            this.mySource = `data:text/html,${_source}`
+        },
+
         home () {
             console.log('go home')
         },
+
         openFile () {
             ipc.send('open-file-dialog')
         },
+
         search () {
             // const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
             // console.log('ZeroKit', ZeroKit)
@@ -120,7 +170,80 @@ const ZeroVue = new Vue({
             // const zeroKit = new ZeroKit()
 
             this.zeroKit.search('i am looking for something SMPL')
-        }
+        },
+
+        // _parseFlags: function (_flags) {
+        //     if (_flags.indexOf('ADMIN') !== -1) {
+        //         return `<strong class="text-danger">[ADMIN]</strong> `
+        //     }
+        // },
+
+        _setConnStatus: function (_status, _class) {
+            this.networkStatus = _status
+            this.networkStatusClass = _class
+        },
+
+        // _setIdentity: function (_identity) {
+        //     // 173.239.230.54 [ Toronto, Canada ]
+        //     this.networkIdentity = _identity
+        // },
+
+        // _resetSearch: function () {
+        //     /* Clear search input. */
+        //     this.query = ''
+        //
+        //     /* Set focus to window. */
+        //     window.focus()
+        // },
+
+        // loadMsg: function (_msgId) {
+        //     alert(`loading message [ ${_msgId} ]`)
+        // },
+
+        // msgMarkAllRead: function () {
+        //     this.msgList = []
+        // },
+
+        // msgNew: function () {
+        //     alert('new message')
+        // },
+
+        // msgShowAll: function () {
+        //     alert('load all messages')
+        // },
+
+        // networkStatusLogs: function () {
+        //     /* Initialize body. */
+        //     let body = ''
+        //
+        //     body += '<pre>'
+        //
+        //     for (let entry of this.logMgr.reverse()) {
+        //         body += `${entry}\n`
+        //     }
+        //
+        //     body += '</pre>'
+        //
+        //     /* Build zerovue package. */
+        //     const pkg = { body }
+        //
+        //     /* Send package to zerovue. */
+        //     _zerovueMsg(pkg)
+        // },
+
+        // networkStatusShowAll: function () {
+        //     alert('_networkStatusShowAll')
+        // },
+
+        // search: function () {
+        //     if (!this.query) {
+        //         return this.alert('Search Error', 'Please enter the REQUEST you desdire.')
+        //     }
+        //
+        //     /* Call search library. */
+        //     _search(this.query)
+        // }
+
     },
     mounted: function () {
         /* Initialize ZeroKit (from HOST). */

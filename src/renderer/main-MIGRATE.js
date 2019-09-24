@@ -7,47 +7,12 @@
 const vueAppManager = {
     el: '#app',
     data: () => ({
-        /* System */
-        logMgr: [],
-
-        /* Constants */
-        BLOCK_HASH_LENGTH: 20,
-        CHUNK_LENGTH: 16384,
-
-        /* Device Status */
-        storageUsed: null,
-        storageQuota: null,
-
-        /* Network Status */
-        networkIdentity: null,
-        networkStatus: null,
-        networkStatusClass: null,
-
-        /* Search */
-        query: null,
-
-        /* Profile */
-        profile: {},
-
-        /* Zeronet Zite Manager */
-        ziteMgr: {},
-        destination: null,
-
-        /* Torrent Manager */
-        torrentMgr: {}
     }),
     mounted: function () {
         /* Initialize application. */
         this._init()
     },
     computed: {
-        msgIndicator: function () {
-            if (this.msgList.length) {
-                return true
-            } else {
-                return false
-            }
-        }
     },
     methods: {
         _init: function () {
@@ -170,67 +135,6 @@ const vueAppManager = {
             // 	document.execCommand('Stop', false)
             // }
         },
-        _parseFlags: function (_flags) {
-            if (_flags.indexOf('ADMIN') !== -1) {
-                return `<strong class="text-danger">[ADMIN]</strong> `
-            }
-        },
-        _setConnStatus: function (_status, _class) {
-            this.networkStatus = _status
-            this.networkStatusClass = _class
-        },
-        _setIdentity: function (_identity) {
-            // 173.239.230.54 [ Toronto, Canada ]
-            this.networkIdentity = _identity
-        },
-        _resetSearch: function () {
-            /* Clear search input. */
-            this.query = ''
-
-            /* Set focus to window. */
-            window.focus()
-        },
-        loadMsg: function (_msgId) {
-            alert(`loading message [ ${_msgId} ]`)
-        },
-        msgMarkAllRead: function () {
-            this.msgList = []
-        },
-        msgNew: function () {
-            alert('new message')
-        },
-        msgShowAll: function () {
-            alert('load all messages')
-        },
-        networkStatusLogs: function () {
-            /* Initialize body. */
-            let body = ''
-
-            body += '<pre>'
-
-            for (let entry of this.logMgr.reverse()) {
-                body += `${entry}\n`
-            }
-
-            body += '</pre>'
-
-            /* Build zerovue package. */
-            const pkg = { body }
-
-            /* Send package to zerovue. */
-            _zerovueMsg(pkg)
-        },
-        networkStatusShowAll: function () {
-            alert('_networkStatusShowAll')
-        },
-        search: function () {
-            if (!this.query) {
-                return this.alert('Search Error', 'Please enter the REQUEST you desdire.')
-            }
-
-            /* Call search library. */
-            _search(this.query)
-        }
     }
 }
 

@@ -26,9 +26,40 @@ ipcRenderer.on('ping', () => {
 
 /* Handle incoming HOST Post Message. */
 ipcRenderer.on('message', (event, message) => {
-    console.log(`ipcRenderer: Incoming Post Message [ ${JSON.stringify(message)} ]`)
+    console.log(`ipcRenderer: Incoming Post Message [ ${message} ]`)
+    // console.log(`ipcRenderer: Incoming Post Message [ ${JSON.stringify(message)} ]`)
 
     // TODO Handle incoming message
+    // console.log(message);
+
+    let body = null
+    let prepend = false
+
+    try {
+        message = JSON.parse(message)
+
+        body = message.body
+
+        const prepend = message.prepend
+        console.log(prepend)
+    } catch (e) {
+        // FIXME How should we handle parsing errors??
+        // console.error(e)
+    }
+
+    // console.log('BODY')
+    // console.log(body)
+    if (body) {
+        console.log('BODY')
+        console.log(body)
+
+        let action = 'updateMySource'
+
+        let pkg = { action, body }
+
+        /* Send pong to host. */
+        ipcRenderer.sendToHost(JSON.stringify(pkg))
+    }
 })
 
 /*******************************************************************************
