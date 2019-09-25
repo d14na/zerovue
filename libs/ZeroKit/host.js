@@ -22,6 +22,9 @@ class ZeroKit {
         /* Initialize request manager. */
         this.requestMgr = {}
 
+        /* Initialize log manager. */
+        this.logMgr = []
+
         /* Initialize Gatekeeper's Ready flag. */
         this.gateReady = false
 
@@ -33,17 +36,22 @@ class ZeroKit {
         this.account = null
         this.identity = null
 
-        /* Messaging */
-        this.msgList = []
+        /* Initialize network status. */
+        this.networkStatus = 'Disconnected'
+        this.networkStatusClass = 'text-danger'
+
+        /* Initialize profile. */
+        this.profile = {
+            icon: './img/dark-hood-icon.jpg',
+            nametag: 'Guest User'
+        }
 
         /* Initialize connection (holder). */
         this.conn = null
 
         /* Initialize functions / methods. */
         this.addLog = require('./host/_addLog')
-        this.alert = require('./host/_alert')
         this.authRequest = require('./host/_authRequest')
-        this.clearModals = require('./host/_clearModals')
         this.connect = require('./host/_conn')
         this.errors = require('./host/_errors')
         this.formatFileData = require('./host/_formatFileData')
@@ -75,6 +83,27 @@ class ZeroKit {
 
         // this.authGatekeeper()
     }
+
+    // _parseFlags: function (_flags) {
+    //     if (_flags.indexOf('ADMIN') !== -1) {
+    //         return `<strong class="text-danger">[ADMIN]</strong> `
+    //     }
+    // },
+
+    // _setConnStatus: function (_status, _class) {
+    //     this.networkStatus = _status
+    //     this.networkStatusClass = _class
+    // },
+
+    // _setIdentity: function (_identity) {
+    //     // 173.239.230.54 [ Toronto, Canada ]
+    //     this.networkIdentity = _identity
+    // },
+
+    // networkStatusShowAll: function () {
+    //     alert('_networkStatusShowAll')
+    // },
+
 }
 
 /**

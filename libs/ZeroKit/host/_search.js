@@ -36,7 +36,7 @@ const search = async function (_query) {
     /* Validate search query. */
     if (query.slice(0, 10).toUpperCase() === 'DEBUG.MENU') {
         /* Clear open modals. */
-        this.clearModals()
+        // this.clearModals()
 
         /* Show ADMIN permission modal. */
         $('#modalDebug').modal({

@@ -36,7 +36,7 @@ const whoAmI = function (_data) {
         /* Set identity (display). */
         // App._setIdentity(networkIdentity)
     } else {
-        return this.alert('Peer Id verificatino FAILED!')
+        return this.toast('Peer Id verificatino FAILED!')
     }
 
     /* Clear modals. */

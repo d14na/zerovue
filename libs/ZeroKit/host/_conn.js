@@ -9,7 +9,7 @@
  */
 const connect = async function (_endpoint) {
     /* Show "connecting.." notification. */
-    await this.toast('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
+    await this.toast('Connecting to Supeer.Host', 'This will only take a moment.', 'Please wait..')
 
     /* Create a new Socket JS connection . */
     this.conn = new SockJS(_endpoint)

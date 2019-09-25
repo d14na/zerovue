@@ -22,9 +22,9 @@ const initUI = function () {
     /* Handle IPC Messages. */
     // NOTE: This is how we receive our `postMessage` requests from UI
     //       using the `ipcRenderer.sendToHost` method.
-    this.UI.addEventListener('ipc-message', (event) => {
+    this.UI.addEventListener('ipc-message', (_evt) => {
         /* Retrieve channel. */
-        const channel = event.channel
+        const channel = _evt.channel
 
         let pkg
 
@@ -56,16 +56,16 @@ const initUI = function () {
     })
 
     /* Capture ALL console messages from SANDBOX. */
-    this.UI.addEventListener('console-message', function (e) {
+    this.UI.addEventListener('console-message', (_evt) => {
         /* Parse source file. */
-        const srcFile = e.sourceId.replace(/^.*[\\\/]/, '')
+        const srcFile = _evt.sourceId.replace(/^.*[\\\/]/, '')
 
         /* Build new log entry. */
         const timestamp = `➤ ZeroKit Console ${moment().format('YYYY.MM.DD @ HH:mm:ss')}`
-        const entry = `[ ${srcFile} ](Line ${e.line}): ${e.message}`
+        const entry = `[ ${srcFile} ](Line ${_evt.line}): ${_evt.message}`
 
         /* Add to log manager. */
-        // App.logMgr.push(`${timestamp} ${entry}`)
+        this.zeroKit.logMgr.push(`${timestamp} ${entry}`)
 
         /* Write to console. */
         console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')

@@ -10,7 +10,7 @@ const addLog = function (_message) {
     const entry = `[ ${_message} ]`
 
     /* Add to log manager. */
-    // App.logMgr.push(`${timestamp} ${entry}`)
+    this.logMgr.push(`${timestamp} ${entry}`)
 
     /* Write to console. */
     console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')

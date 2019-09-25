@@ -19,7 +19,7 @@ const handleMessage = async function (_data) {
         /* Validate response. */
         if (data.error) {
             /* Show alert. */
-            return this.alert(
+            return this.toast(
                 'Supeer Network Error',
                 data.error,
                 'Please try your request again..',
@@ -96,9 +96,6 @@ const handleMessage = async function (_data) {
             }
 
             break
-        case 'NOTIF':
-            /* Handle response. */
-            return this.msgList.push(data)
         case 'SEARCH':
             /* Handle response. */
             return _handleSearch(data)

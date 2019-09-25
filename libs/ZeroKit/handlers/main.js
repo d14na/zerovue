@@ -15,5 +15,5 @@ ${JSON.stringify(data, null, 4)}
     </code></pre>`
 
     /* Clear modals. */
-    this.clearModals()
+    // this.clearModals()
 }

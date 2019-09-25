@@ -35,7 +35,7 @@ const _handleConfig = async function (_data) {
     /* Validate config. */
     if (!config) {
         /* Show alert. */
-        return this.alert(
+        return this.toast(
             'Oops! Download Error!',
             'Failed to download zite configuration.',
             'Please try your request again..',
@@ -51,7 +51,7 @@ const _handleConfig = async function (_data) {
     /* Validate signature. */
     if (!isSignatureValid) {
         /* Show alert. */
-        return this.alert(
+        return this.toast(
             'Oops! Validation Error!',
             'Failed to validate zite configuration file.',
             'Please try your request again..',
@@ -87,7 +87,7 @@ const _handleConfig = async function (_data) {
         let calcDiff = moment.unix(modified).diff(
             moment.unix(savedConfig.modified), 'hours', true)
 
-        this.alert(
+        this.toast(
             'Zite Update Available',
             'Would you like to download the latest zite now?',
             `Last updated: ${calcDiff} hours ago.`,
@@ -116,7 +116,7 @@ const _handleConfig = async function (_data) {
     } else {
         this.addLog('New zite added!')
 
-        this.alert(
+        this.toast(
             'Add New Zite',
             'Would you like to add this zite to your gallery?',
             `[ ${App.destination} ]`,

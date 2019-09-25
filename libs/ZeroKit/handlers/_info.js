@@ -127,5 +127,5 @@ const _handleInfo = async function (_data) {
     }
 
     /* Clear modals. */
-    this.clearModals()
+    // this.clearModals()
 }

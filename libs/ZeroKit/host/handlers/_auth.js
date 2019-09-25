@@ -2,7 +2,8 @@
  * Authorize
  */
 const auth = function (_data) {
-    console.log('HANDLING AUTH', _data);
+    // console.log('HANDLING AUTH', _data)
+
     /* Validate data. */
     if (!_data || !_data.account) {
         return null
@@ -27,7 +28,7 @@ const auth = function (_data) {
     }
 
     /* Clear modals. */
-    this.clearModals()
+    // this.clearModals()
 }
 
 module.exports = auth
