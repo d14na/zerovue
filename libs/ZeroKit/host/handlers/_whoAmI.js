@@ -26,7 +26,8 @@ const whoAmI = function (_data) {
     /* Initialize verification. */
     let verification = null
 
-    if (identity === this.calcIdentity(address)) {
+    if (identity === ZeroUtils.calcIdentity(address)) {
+    // if (identity === this.calcIdentity(address)) {
         verification = 'VERIFIED'
 
         /* Set network identity. */

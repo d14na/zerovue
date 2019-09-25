@@ -21,7 +21,8 @@ const _handleBlock = function (_data) {
     }
 
     /* Calculate verification hash. */
-    const verificationHash = _calcInfoHash(block)
+    const verificationHash = ZeroUtils.calcInfoHash(block)
+
     console.info('Block Verification Hash', verificationHash)
 
     // TODO Perform verification against metadata pieces

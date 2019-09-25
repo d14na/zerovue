@@ -38,7 +38,7 @@ const handleMessage = async function (_data) {
             action = data.action
         } else {
             /* Retrieve action from saved request. */
-            action = this.getAction(data)
+            action = this.parseAction(data)
         }
 
         console.log(`Retrieved ACTION [ ${action} ] from message.`)

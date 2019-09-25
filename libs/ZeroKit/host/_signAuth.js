@@ -1,24 +1,31 @@
 /**
- * Signs a (data) proof provided by the server for account authentication.
+ * Sign Authorization (Package)
+ *
+ * A formatted proof is signed and sent to the Supeer host.
+ *
+ * NOTE: The epoch value MUST be within the time limit set by supeer host.
+ *       Current default is [ 15 ] seconds.
+ *
+ * Proof Format
+ * ------------
+ *
+ * [Network Id]:[Client Ip Address]:[Client Port Number]:[Epoch]
+ *
+ * Example: 0NET-TLR:108.162.241.65:47038:1555734000
  */
 const signAuth = async function (_proof) {
     console.log('SIGNATURE PROOF', _proof)
-    /* Initialize a new web3 object to our provider. */
-    // const web3 = new Web3()
-
     // TEMP FOR DEVELOPMENT/TESTING PURPOSES ONLY
-    // const privateKey = '0x9b2495bf3d9f3116a4ec7301cc2d8cd8c9d86b4f09b813a8455d8db18d6eb00' // 0xF51175cF846f88b9419228905d63dcDd43aeC9E8 (invalid)
-    // const privateKey = '9b2495bf3d9f3116a4ec7301cc2d8cd8c9d86b4f09b813a8455d8db18d6eb00d' // 0xC3e7b7f10686263f13fF2fA2313Dc00c2592481d (invalid)
-    const privateKey = '0x9b2495bf3d9f3116a4ec7301cc2d8cd8c9d86b4f09b813a8455d8db18d6eb00d' // 0x65C44EcAc56040a63da60bf5cA297951780eFEd1 (valid)
+    // 0x65C44EcAc56040a63da60bf5cA297951780eFEd1 (valid)
+    const privateKey = '0x9b2495bf3d9f3116a4ec7301cc2d8cd8c9d86b4f09b813a8455d8db18d6eb00d'
     // console.log('PRIVATE KEY', privateKey)
 
-    // let privateKey = "0x3141592653589793238462643383279502884197169399375105820974944592"
-    let wallet = new ethers.Wallet(privateKey)
+    /* Initialize (Ethers) wallet. */
+    const wallet = new ethers.Wallet(privateKey)
 
-    /* Create the signature by signing the proof with private key. */
+    /* Create the signature by signing the proof with wallet. */
     const signature = await wallet.signMessage(_proof)
-    console.log('SIGNATURE', signature)
-    // const signature = web3.eth.accounts.sign(_proof, privateKey)
+    // console.log('SIGNATURE', signature)
 
     /* Return the signed proof. */
     return signature

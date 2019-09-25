@@ -1,13 +1,14 @@
 /**
- * Retrieve Action from Requests Manager
+ * Parse Action (from Request Manager)
  */
-const getAction = function (_data) {
+const parseAction = function (_data) {
     /* Initialize action. */
     let action = null
 
-    /* Retrieve request id. */
+    /* Set request id. */
     const requestId = _data.requestId
 
+    /* Validate request id. */
     if (requestId && this.requestMgr[requestId]) {
         /* Retrieve action. */
         action = this.requestMgr[requestId].action
@@ -24,4 +25,4 @@ const getAction = function (_data) {
     return action
 }
 
-module.exports = getAction
+module.exports = parseAction

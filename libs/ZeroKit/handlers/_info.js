@@ -17,7 +17,7 @@ const _handleInfo = async function (_data) {
     }
 
     /* Retrieve torrent info. */
-    const torrentInfo = _verifyMetadata(infoHash, metadata)
+    const torrentInfo = this.parseMetadata(infoHash, metadata)
     console.log('TORRENT INFO', torrentInfo)
 
     /* Verify torrent info. */

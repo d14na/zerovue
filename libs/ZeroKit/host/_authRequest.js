@@ -15,9 +15,10 @@ const authRequest = async function (_identity) {
     const proof = `${network}:${_identity}:${nonce}`
     // console.log('Proof', proof)
 
+    this.addLog(`Authentication Proof [ ${proof} ]`)
+
     /* Retrieve signed proof. */
     const sig = await this.signAuth(proof)
-    this.addLog(`Authentication proof: [ ${proof} ]`)
 
     /* Build package. */
     const pkg = { action, proof, sig }

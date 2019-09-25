@@ -1,5 +1,8 @@
 /**
  * Image Converter
+ *
+ * Converts binary data to base64.
+ * Allows for embedding media directly into HTML source.
  */
 const imgConverter = function (_input) {
     /* Initialize input (typed array). */
@@ -9,7 +12,7 @@ const imgConverter = function (_input) {
     let i = uInt8Array.length
 
     /* Initialize binary string holder. */
-    let biStr = [] //new Array(i);
+    let biStr = []
 
     /* Perform byte(s) conversion. */
     while (i--) {

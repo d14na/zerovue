@@ -15,13 +15,13 @@ const _bodyBuilder = function (_dest, _config) {
     console.log('HTML BODY RENDERER CALLED', new Date())
 
     /* Validate destination. */
-    if (!App.ziteMgr[_dest] || !App.ziteMgr[_dest]['data']) {
+    if (!ZeroVue.ziteMgr[_dest] || !ZeroVue.ziteMgr[_dest]['data']) {
         return console.error(`No DATA found for [ ${_dest} ]`)
     }
 
     /* Validate start page (index.html). */
     // FIXME Add support for other zite pages.
-    if (!App.ziteMgr[_dest]['data']['index.html']) {
+    if (!ZeroVue.ziteMgr[_dest]['data']['index.html']) {
         console.error(`No START PAGE found for [ ${_dest} ]`)
 
         /* Retry body builder (after delay). */
@@ -31,13 +31,13 @@ const _bodyBuilder = function (_dest, _config) {
         }, RETRY_BUILD_DELAY)
     } else {
         /* Set start page (index.html). */
-        let startPage = App.ziteMgr[_dest]['data']['index.html']
+        let startPage = ZeroVue.ziteMgr[_dest]['data']['index.html']
 
         /* Format start page. */
         startPage = _formatFileData(startPage, 'html')
 
         /* Set start page. */
-        App.ziteMgr[_dest]['body'] = startPage
+        ZeroVue.ziteMgr[_dest]['body'] = startPage
     }
 
     /* Initilize start pos. */
@@ -59,7 +59,7 @@ const _bodyBuilder = function (_dest, _config) {
     let endMatch = `>`
 
     /* LINK (eg. style sheets) */
-    while (App.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
         /* Handle element, then update start position. */
         startPos = _handleElem(_dest, startPos, startMatch, endMatch)
     }
@@ -74,7 +74,7 @@ const _bodyBuilder = function (_dest, _config) {
     endMatch = `>`
 
     /* IMG */
-    while (App.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
         /* Handle element, then update start position. */
         startPos = _handleElem(_dest, startPos, startMatch, endMatch)
     }
@@ -89,7 +89,7 @@ const _bodyBuilder = function (_dest, _config) {
     endMatch = `'`
 
     /* URL (eg. background-image) */
-    while (App.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
         /* Handle element, then update start position. */
         startPos = _handleElem(_dest, startPos, startMatch, endMatch)
     }
@@ -104,18 +104,18 @@ const _bodyBuilder = function (_dest, _config) {
     endMatch = `script>`
 
     /* SCRIPT */
-    while (App.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf(startMatch, startPos) !== -1 && _numHandled < SAFETY_MAX) {
         /* Handle element, then update start position. */
         startPos = _handleElem(_dest, startPos, startMatch, endMatch)
     }
 
-    while (App.ziteMgr[_dest]['body'].indexOf('<script', startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf('<script', startPos) !== -1 && _numHandled < SAFETY_MAX) {
         break
         /* Set starting position. */
-        startPos = App.ziteMgr[_dest]['body'].indexOf('<script', startPos)
+        startPos = ZeroVue.ziteMgr[_dest]['body'].indexOf('<script', startPos)
 
         /* Set ending position. */
-        endPos = App.ziteMgr[_dest]['body'].indexOf('script>', startPos + 7) + 7
+        endPos = ZeroVue.ziteMgr[_dest]['body'].indexOf('script>', startPos + 7) + 7
 
         /* Validate element end position. */
         if (endPos < startPos) {
@@ -124,7 +124,7 @@ const _bodyBuilder = function (_dest, _config) {
         }
 
         /* Retrieve element. */
-        elem = App.ziteMgr[_dest]['body'].slice(startPos, endPos)
+        elem = ZeroVue.ziteMgr[_dest]['body'].slice(startPos, endPos)
 
         if (
             elem.includes('href="https://') ||
@@ -149,16 +149,16 @@ const _bodyBuilder = function (_dest, _config) {
 
             /* Validate JavaScript. */
             if (src || type === 'text/javascript') {
-                let preBody = App.ziteMgr[_dest]['body'].slice(0, startPos)
-                let postBody = App.ziteMgr[_dest]['body'].slice(endPos)
+                let preBody = ZeroVue.ziteMgr[_dest]['body'].slice(0, startPos)
+                let postBody = ZeroVue.ziteMgr[_dest]['body'].slice(endPos)
 
-                let inline = App.ziteMgr[_dest]['data'][src]
+                let inline = ZeroVue.ziteMgr[_dest]['data'][src]
 
                 /* Parse file data. */
                 inline = _formatFileData(inline, 'js')
 
                 /* Update body. */
-                App.ziteMgr[_dest]['body'] = `${preBody}${inline}${postBody}`
+                ZeroVue.ziteMgr[_dest]['body'] = `${preBody}${inline}${postBody}`
             }
         }
 
@@ -175,13 +175,13 @@ const _bodyBuilder = function (_dest, _config) {
     // NOTE THIS IS THE FIRST EXEMPTION NEEDED TO SUPPORT PNG IMAGES
     //      EMBEDDED IN EXTERNAL SCRIPT FILES.
 
-    while (App.ziteMgr[_dest]['body'].indexOf('src: "', startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf('src: "', startPos) !== -1 && _numHandled < SAFETY_MAX) {
         break
         /* Set starting position. */
-        startPos = App.ziteMgr[_dest]['body'].indexOf('src: "', startPos)
+        startPos = ZeroVue.ziteMgr[_dest]['body'].indexOf('src: "', startPos)
 
         /* Set ending position. */
-        endPos = App.ziteMgr[_dest]['body'].indexOf('"', startPos + 6)
+        endPos = ZeroVue.ziteMgr[_dest]['body'].indexOf('"', startPos + 6)
 
         /* Validate element end position. */
         if (endPos < startPos) {
@@ -190,7 +190,7 @@ const _bodyBuilder = function (_dest, _config) {
         }
 
         /* Retrieve element. */
-        elem = App.ziteMgr[_dest]['body'].slice(startPos + 6, endPos)
+        elem = ZeroVue.ziteMgr[_dest]['body'].slice(startPos + 6, endPos)
 
         if (
             elem.includes('https://') ||
@@ -214,16 +214,16 @@ const _bodyBuilder = function (_dest, _config) {
             // console.log('Parsed [src]', src)
 
             // if (type === 'text/javascript') {
-            let preBody = App.ziteMgr[_dest]['body'].slice(0, startPos + 6)
-            let postBody = App.ziteMgr[_dest]['body'].slice(endPos)
+            let preBody = ZeroVue.ziteMgr[_dest]['body'].slice(0, startPos + 6)
+            let postBody = ZeroVue.ziteMgr[_dest]['body'].slice(endPos)
 
-            let inline = App.ziteMgr[_dest]['data'][elem]
+            let inline = ZeroVue.ziteMgr[_dest]['data'][elem]
 
             /* Parse file data. */
             inline = _formatFileData(inline, 'png')
 
             /* Update body. */
-            App.ziteMgr[_dest]['body'] = `${preBody}${inline}${postBody}`
+            ZeroVue.ziteMgr[_dest]['body'] = `${preBody}${inline}${postBody}`
             // }
         }
 
@@ -237,13 +237,13 @@ const _bodyBuilder = function (_dest, _config) {
     /* Reset start position. */
     startPos = 0
 
-    while (App.ziteMgr[_dest]['body'].indexOf('<div style="background-image', startPos) !== -1 && _numHandled < SAFETY_MAX) {
+    while (ZeroVue.ziteMgr[_dest]['body'].indexOf('<div style="background-image', startPos) !== -1 && _numHandled < SAFETY_MAX) {
         break
         /* Set starting position. */
-        startPos = App.ziteMgr[_dest]['body'].indexOf('<div style="background-image', startPos)
+        startPos = ZeroVue.ziteMgr[_dest]['body'].indexOf('<div style="background-image', startPos)
 
         /* Set ending position. */
-        endPos = App.ziteMgr[_dest]['body'].indexOf('>', startPos + 1)
+        endPos = ZeroVue.ziteMgr[_dest]['body'].indexOf('>', startPos + 1)
 
         /* Validate element end position. */
         if (endPos < startPos) {
@@ -252,7 +252,7 @@ const _bodyBuilder = function (_dest, _config) {
         }
 
         /* Retrieve element. */
-        elem = App.ziteMgr[_dest]['body'].slice(startPos, endPos + 1)
+        elem = ZeroVue.ziteMgr[_dest]['body'].slice(startPos, endPos + 1)
 
         if (
             elem.includes('href="https://') ||
@@ -272,16 +272,16 @@ const _bodyBuilder = function (_dest, _config) {
             let src = url.slice(5, -2)
             console.log('Parsed [url / src]', url, src)
 
-            let preBody = App.ziteMgr[_dest]['body'].slice(0, startPos)
-            let postBody = App.ziteMgr[_dest]['body'].slice(endPos + 1)
+            let preBody = ZeroVue.ziteMgr[_dest]['body'].slice(0, startPos)
+            let postBody = ZeroVue.ziteMgr[_dest]['body'].slice(endPos + 1)
 
-            let inline = App.ziteMgr[_dest]['data'][src]
+            let inline = ZeroVue.ziteMgr[_dest]['data'][src]
 
             /* Parse file data. */
             inline = elem.replace(src, _formatFileData(inline, 'jpg'))
 
             /* Update body. */
-            App.ziteMgr[_dest]['body'] = `${preBody}${inline}${postBody}`
+            ZeroVue.ziteMgr[_dest]['body'] = `${preBody}${inline}${postBody}`
         }
 
         /* Set next position. */
@@ -292,13 +292,13 @@ const _bodyBuilder = function (_dest, _config) {
     }
 
     /* Validate required files. */
-    if (Object.keys(_config.files).length === Object.keys(App.ziteMgr[_dest]['data']).length) {
-        // console.log('BODY BUILDER', App.ziteMgr[_dest]['body'])
+    if (Object.keys(_config.files).length === Object.keys(ZeroVue.ziteMgr[_dest]['data']).length) {
+        // console.log('BODY BUILDER', ZeroVue.ziteMgr[_dest]['body'])
 
         /* Validate body. */
-        if (App.ziteMgr[_dest]['body']) {
+        if (ZeroVue.ziteMgr[_dest]['body']) {
             /* Set body. */
-            const body = App.ziteMgr[_dest]['body']
+            const body = ZeroVue.ziteMgr[_dest]['body']
 
             /* Build zerovue package. */
             const pkg = { body }
@@ -318,7 +318,7 @@ const _bodyBuilder = function (_dest, _config) {
         const numRequired = Object.keys(_config.files).length
 
         /* Set num files available. */
-        const numAvail = Object.keys(App.ziteMgr[_dest]['data']).length
+        const numAvail = Object.keys(ZeroVue.ziteMgr[_dest]['data']).length
 
         console.error(`[ ${_dest} ] missing [ ${numRequired - numAvail} ] pieces.`)
 
@@ -335,7 +335,7 @@ const _bodyBuilder = function (_dest, _config) {
  */
 const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
     /* Set body. */
-    const body = App.ziteMgr[_dest]['body']
+    const body = ZeroVue.ziteMgr[_dest]['body']
 
     /* Set starting position. */
     _startIndex = body.indexOf(_startMatch, _startIndex)
@@ -439,7 +439,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         let append = body.slice(endPos)
 
         /* Set inlined (file data). */
-        let inline = App.ziteMgr[_dest]['data'][localPath]
+        let inline = ZeroVue.ziteMgr[_dest]['data'][localPath]
 
         /* Validate inline. */
         if (!inline) {
@@ -454,7 +454,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         inline = _formatFileData(inline, fileExt)
 
         /* Update zite manager (body). */
-        App.ziteMgr[_dest]['body'] = `${prepend}<style>${inline}</style>${append}`
+        ZeroVue.ziteMgr[_dest]['body'] = `${prepend}<style>${inline}</style>${append}`
     } else if (fileExt === 'JS') {
         /* Set prepended body. */
         let prepend = body.slice(0, _startIndex)
@@ -463,7 +463,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         let append = body.slice(endPos)
 
         /* Set inlined (file data). */
-        let inline = App.ziteMgr[_dest]['data'][localPath]
+        let inline = ZeroVue.ziteMgr[_dest]['data'][localPath]
 
         /* Validate inline. */
         if (!inline) {
@@ -478,7 +478,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         inline = _formatFileData(inline, fileExt)
 
         /* Update zite manager (body). */
-        App.ziteMgr[_dest]['body'] = `${prepend}<script>${inline}</script>${append}`
+        ZeroVue.ziteMgr[_dest]['body'] = `${prepend}<script>${inline}</script>${append}`
     } else if (fileExt === 'PNG') {
         /* Set prepended body. */
         let prepend = body.slice(0, _startIndex + pathStart)
@@ -487,7 +487,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         let append = body.slice(_startIndex + pathEnd)
 
         /* Set inlined (file data). */
-        let inline = App.ziteMgr[_dest]['data'][localPath]
+        let inline = ZeroVue.ziteMgr[_dest]['data'][localPath]
 
         /* Validate inline. */
         if (!inline) {
@@ -502,7 +502,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         inline = _formatFileData(inline, fileExt)
 
         /* Update zite manager (body). */
-        App.ziteMgr[_dest]['body'] = `${prepend}${inline}${append}`
+        ZeroVue.ziteMgr[_dest]['body'] = `${prepend}${inline}${append}`
     } else if (fileExt === 'JPG') {
         /* Set prepended body. */
         let prepend = body.slice(0, _startIndex + pathStart)
@@ -511,7 +511,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         let append = body.slice(_startIndex + pathEnd)
 
         /* Set inlined (file data). */
-        let inline = App.ziteMgr[_dest]['data'][localPath]
+        let inline = ZeroVue.ziteMgr[_dest]['data'][localPath]
 
         /* Validate inline. */
         if (!inline) {
@@ -526,7 +526,7 @@ const _handleElem = function (_dest, _startIndex, _startMatch, _endMatch) {
         inline = _formatFileData(inline, fileExt)
 
         /* Update zite manager (body). */
-        App.ziteMgr[_dest]['body'] = `${prepend}${inline}${append}`
+        ZeroVue.ziteMgr[_dest]['body'] = `${prepend}${inline}${append}`
     } else {
         console.error(`Unhandled extension found [ ${fileExt} ] for [ ${localPath} ]`)
     }

@@ -19,4 +19,5 @@ const alert = function (_title, _subtitle, _body, _success) {
     /* Return success. */
     return _success
 }
+
 module.exports = alert

@@ -32,6 +32,16 @@ const calcInfoHash = function (_data) {
 }
 
 /**
+ * Escape unicode characters.
+ * Converts to a string representation of the unicode.
+ */
+const escapeUnicode = function (_str) {
+    return _str.replace(/[^\0-~]/g, function (ch) {
+        return '\\u' + ('000' + ch.charCodeAt().toString(16)).slice(-4)
+    })
+}
+
+/**
  * Retrieve Querystring Parameter (by name)
  */
 const getParameterByName = function (name, url) {
@@ -71,6 +81,7 @@ module.exports = {
     calcFileHash,
     calcIdentity,
     calcInfoHash,
+    escapeUnicode,
     getParameterByName,
     isJson
 }

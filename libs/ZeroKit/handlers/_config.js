@@ -44,7 +44,7 @@ const _handleConfig = async function (_data) {
     }
 
     /* Verify the signature of the configuraton (content.json). */
-    const isSignatureValid = await _verifyConfig(config)
+    const isSignatureValid = await _validateConfig(config)
         .catch((_err) => console.error(
             'Could NOT verify Zeronet config', _err, _data))
 
@@ -130,16 +130,16 @@ const _handleConfig = async function (_data) {
     }
 
     /* Initialize zite manager. */
-    App.ziteMgr[App.destination] = {}
+    ZeroVue.ziteMgr[App.destination] = {}
 
     /* Initialize zite file data. */
-    App.ziteMgr[App.destination]['data'] = {}
+    ZeroVue.ziteMgr[App.destination]['data'] = {}
 
     /* Set zite config (content.json). */
-    App.ziteMgr[App.destination]['config'] = config
+    ZeroVue.ziteMgr[App.destination]['config'] = config
 
     /* Initialize zite (display) body. */
-    App.ziteMgr[App.destination]['body'] = ''
+    ZeroVue.ziteMgr[App.destination]['body'] = ''
 
     /* Start file verification. */
     for (let _innerPath in config.files) {

@@ -1,28 +1,23 @@
 /**
  * Websocket Connect
  *
- * Open a new connection to the Zero Private Enterprise Network (Supeer).
- * via a websocket (or applicable fallback) connection.
+ * Open a new connection to Supeer via a websocket
+ * (or applicable fallback) connection.
  *
- * NOTE The closest (available) server can be reached by querying the DNS list:
- *      https://supeer.network
+ * NOTE: The closest (available) server can be reached by querying the DNS list:
+ *       https://supeer.network
  */
 const connect = async function (_endpoint) {
     /* Show "connecting.." notification. */
-    await this.wait('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
-    // await _app.wait('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
+    await this.toast('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
 
     /* Create a new Socket JS connection . */
     this.conn = new SockJS(_endpoint)
-    // this.conn.socket = new SockJS(_endpoint)
 
     /* Initialize event handlers. */
     this.conn.onopen = _connOpen.bind(this)
     this.conn.onmessage = _connMessage.bind(this)
     this.conn.onclose = _connClose.bind(this)
-    // this.conn.socket.onopen = _connOpen.bind(this)
-    // this.conn.socket.onmessage = _connMessage.bind(this)
-    // this.conn.socket.onclose = _connClose.bind(this)
 }
 
 /**
@@ -65,6 +60,3 @@ const _connClose = function () {
 }
 
 module.exports = connect
-// module.exports = {
-//     connect
-// }

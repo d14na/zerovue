@@ -1,7 +1,7 @@
 /**
  * On Message
  *
- * Receives and handles ALL incoming messages from our embedded iframe.
+ * Receives and handles ALL incoming messages from our sandboxed webview.
  *
  * WARNING Sandboxed iframes which lack the 'allow-same-origin'
  * header have "null" rather than a valid origin. This means we still
@@ -18,6 +18,7 @@ const onMessage = async function (_event) {
     const source = _event.source
 
     /* Validate the message contents. */
+    // FIXME Do we need to support `null` in an Electron app??
     if (origin === 'null' && source === contentWindow) {
         /* Retrieve data. */
         const data = _event.data
@@ -53,14 +54,14 @@ const onMessage = async function (_event) {
                     let fileData = null
 
                     /* Retrieve file data from zite manager. */
-                    fileData = App.ziteMgr[App.destination]['data'][data.params]
+                    fileData = ZeroVue.ziteMgr[App.destination]['data'][data.params]
 
-                    console.log('RAW FILE DATA', fileData, App.ziteMgr)
+                    console.log('RAW FILE DATA', fileData, ZeroVue.ziteMgr)
 
                     /* Validate file data. */
                     if (!fileData) {
                         /* Set config. */
-                        let config = App.ziteMgr[App.destination]['config']
+                        let config = ZeroVue.ziteMgr[App.destination]['config']
 
                         /* Require the missing file. */
                         // FIXME Prevent against infinite looping.
@@ -391,17 +392,5 @@ const onMessage = async function (_event) {
         }
     }
 }
-
-/**
- * Send Gateway Message
- *
- * WARNING We're sending the message to "*", rather than some specific
- * origin. Sandboxed iframes which lack the 'allow-same-origin' header
- * don't have an origin which we can target.
- * (this might allow some "zero-day-style" esoteric attacks)
- */
-// const _zerovueMsg = function (_message = {}) {
-//     contentWindow.postMessage(_message, '*')
-// }
 
 module.exports = onMessage

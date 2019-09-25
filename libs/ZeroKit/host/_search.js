@@ -9,7 +9,7 @@
  *     3. IPFS (cid)
  */
 const search = async function (_query) {
-    /* Set query. */
+    /* Set (local) query. */
     const query = _query
 
     this.addLog(`Searching for [ ${query} ]`)
@@ -45,13 +45,13 @@ const search = async function (_query) {
         })
 
         /* Reset search. */
-        App._resetSearch()
-    } else if (query.slice(0, 7).toUpperCase() === 'GETFILE' && query.length > 10) {
+        ZeroVue.resetSearch()
+    } else if (query.slice(0, 8).toUpperCase() === 'GET.FILE' && query.length > 11) {
         /* Set action. */
         action = 'GET'
 
         /* Retrieve request parameters. */
-        params = query.slice(8)
+        params = query.slice(9)
 
         /* Retrieve destination. */
         dest = params.split(':')[0]
@@ -120,7 +120,7 @@ const search = async function (_query) {
     /* Send package. */
     if (this.sendMessage(pkg)) {
         /* Reset search. */
-        App._resetSearch()
+        ZeroVue.resetSearch()
     }
 }
 

@@ -3,7 +3,7 @@
  *
  * NOTE A torrent's info hash is derived from its metadata.
  */
-const verifyMetadata = function (_infoHash, _metadata) {
+const parseMetadata = function (_infoHash, _metadata) {
     /* Convert the metadata to a buffer. */
     const metadata = Buffer.from(_metadata, 'hex')
 
@@ -20,8 +20,8 @@ const verifyMetadata = function (_infoHash, _metadata) {
     // console.log('Encoded torrent info', encoded)
 
     /* Calculate verification hash (from encoded metadata). */
-    const verificationHash = _calcInfoHash(encoded)
-    console.info(`Calculated the verification hash [ ${verificationHash} ]`)
+    const verificationHash = ZeroUtils.calcInfoHash(encoded)
+    console.log(`Calculated the verification hash [ ${verificationHash} ]`)
 
     /* Validate verficiation hash. */
     if (verificationHash === _infoHash) {
@@ -31,4 +31,4 @@ const verifyMetadata = function (_infoHash, _metadata) {
     }
 }
 
-module.exports = verifyMetadata
+module.exports = parseMetadata

@@ -34,7 +34,7 @@ const requireFile = async function  (_dest, _config, _innerPath) {
     /* Validate file data. */
     if (fileData) {
         /* Validate file data. */
-        const isValid = _validateFileData(_config, fileData['data'], _innerPath)
+        const isValid = await this.validateFileData(_config, fileData['data'], _innerPath)
 
         if (isValid) {
             this.addLog(`Validated [ ${dataId} ] [ ${numeral(fileData['data'].length).format('0,0') || 0} bytes ] from [ ${dbName} ].`)
@@ -53,7 +53,7 @@ const requireFile = async function  (_dest, _config, _innerPath) {
             } else {
                 /* Add file data to zite manager. */
                 // NOTE We store required file data (locally) in memory.
-                App.ziteMgr[_dest]['data'][_innerPath] = fileData['data']
+                ZeroVue.ziteMgr[_dest]['data'][_innerPath] = fileData['data']
             }
         } else {
             this.addLog(`[ ${dataId} ] FAILED VALIDATION, now requesting from [ Supeer ]`)
@@ -66,10 +66,6 @@ const requireFile = async function  (_dest, _config, _innerPath) {
 
             /* Send message request. */
             this.sendMessage(pkg)
-
-            // console.error(`[ ${dataId} ] [ ${numeral(fileData['data'].length).format('0,0') || 0} bytes ] FAILED VALIDATION from [ ${dbName} ]`)
-
-            // break
         }
     } else {
         this.addLog(`[ ${dataId} ] NOT IN DB, now requesting from [ Supeer ]`)

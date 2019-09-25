@@ -12,7 +12,9 @@
 class ZeroKit {
     constructor (_host = 'https://supeer.host') {
         /* Initialize constants. */
-        const INFURA_API_KEY = '61a2428e6a4e41a695d876dfac323f0f' // Infura API key
+        this.INFURA_API_KEY = '61a2428e6a4e41a695d876dfac323f0f' // Infura API key
+        this.RECONNECT_DELAY = 3000
+        this.WAIT_DELAY = 500
 
         /* Initialize connection manager. */
         this.conn = null
@@ -37,31 +39,26 @@ class ZeroKit {
         /* Initialize connection (holder). */
         this.conn = null
 
-        /* Initialize utilities. */
-        // NOTE: We MUST bind methods that use `this`.
-        const utils = require('./host/_utils.js')
-        this.calcIdentity = utils.calcIdentity.bind(this)
-
         /* Initialize functions / methods. */
-        this.addLog = require('./host/_addLog.js')
-        this.alert = require('./host/_alert.js')
-        this.authRequest = require('./host/_authRequest.js')
-        this.clearModals = require('./host/_clearModals.js')
-        this.connect = require('./host/_conn.js')
-        this.errors = require('./host/_errors.js')
-        this.formatFileData = require('./host/_formatFileData.js')
-        this.getAction = require('./host/_getAction.js')
-        this.goHome = require('./host/_goHome.js')
-        this.imgConverter = require('./host/_imgConverter.js')
-        this.parseDbSchema = require('./host/_parseDbSchema.js')
-        this.requireFile = require('./host/_requireFile.js')
-        this.search = require('./host/_search.js')
-        this.sendMessage = require('./host/_sendMessage.js')
-        this.signAuth = require('./host/_signAuth.js')
-        this.validateFileData = require('./host/_validateFileData.js')
-        this.verifyConfig = require('./host/_verifyConfig.js')
-        this.verifyMetadata = require('./host/_verifyMetadata.js')
-        this.wait = require('./host/_wait.js')
+        this.addLog = require('./host/_addLog')
+        this.alert = require('./host/_alert')
+        this.authRequest = require('./host/_authRequest')
+        this.clearModals = require('./host/_clearModals')
+        this.connect = require('./host/_conn')
+        this.errors = require('./host/_errors')
+        this.formatFileData = require('./host/_formatFileData')
+        this.homepage = require('./host/_homepage')
+        this.imgConverter = require('./host/_imgConverter')
+        this.parseAction = require('./host/_parseAction')
+        this.parseDbSchema = require('./host/_parseDbSchema')
+        this.parseMetadata = require('./host/_parseMetadata')
+        this.requireFile = require('./host/_requireFile')
+        this.search = require('./host/_search')
+        this.sendMessage = require('./host/_sendMessage')
+        this.signAuth = require('./host/_signAuth')
+        this.toast = require('./host/_toast')
+        this.validateConfig = require('./host/_validateConfig')
+        this.validateFileData = require('./host/_validateFileData')
 
         /* Initialize message handler. */
         this.handleMessage = require('./host/handlers/_message.js')
@@ -87,4 +84,4 @@ class ZeroKit {
  *
  * NOTE: Used by the Browser (Parent) Window.
  */
-exports.module = ZeroKit
+module.exports = ZeroKit

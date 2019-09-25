@@ -3,18 +3,18 @@
  */
 const _handleZeroFile = async function (_data) {
     /* Validate configuration (content.json). */
-    if (!App.ziteMgr[_data.dest]) {
+    if (!ZeroVue.ziteMgr[_data.dest]) {
         /* Create a new manager for zite. */
-        App.ziteMgr[_data.dest] = {}
+        ZeroVue.ziteMgr[_data.dest] = {}
     }
 
-    console.log('HANDLING ZERO FILE [ziteMgr]', App.ziteMgr[_data.dest], _data)
+    console.log('HANDLING ZERO FILE [ziteMgr]', ZeroVue.ziteMgr[_data.dest], _data)
 
     /* Initialize config. */
     let config = null
 
     /* Retrieve configuration. */
-    config = App.ziteMgr[_data.dest]['config']
+    config = ZeroVue.ziteMgr[_data.dest]['config']
     // console.log('FOUND CONFIG', config)
 
     /* Validate config. */
@@ -31,13 +31,13 @@ const _handleZeroFile = async function (_data) {
             config = config.data
 
             /* Initialize zite file data. */
-            App.ziteMgr[_data.dest]['data'] = {}
+            ZeroVue.ziteMgr[_data.dest]['data'] = {}
 
             /* Set zite config (content.json). */
-            App.ziteMgr[_data.dest]['config'] = config
+            ZeroVue.ziteMgr[_data.dest]['config'] = config
 
             /* Initialize zite (display) body. */
-            App.ziteMgr[_data.dest]['body'] = ''
+            ZeroVue.ziteMgr[_data.dest]['body'] = ''
         }
     }
 
@@ -58,7 +58,7 @@ const _handleZeroFile = async function (_data) {
     }
 
     /* Validate file data. */
-    const isValid = _validateFileData(config, fileData, innerPath)
+    const isValid = await this.validateFileData(config, fileData, innerPath)
 
     /* Validate file data. */
     if (isValid) {
@@ -93,7 +93,7 @@ const _handleZeroFile = async function (_data) {
         }
 
         /* Add file data to zite manager. */
-        App.ziteMgr[_data.dest]['data'][innerPath] = fileData
+        ZeroVue.ziteMgr[_data.dest]['data'][innerPath] = fileData
     } else {
         /* Generate error body. */
         console.error(`[ ${innerPath} ] file verification FAILED!`)

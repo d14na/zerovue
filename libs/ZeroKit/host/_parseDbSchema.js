@@ -19,9 +19,7 @@ const parseDbSchema = function (_dbSchema) {
         const maps = dbSchema['maps']
 
         /* Build package. */
-        const pkg = {
-            name, filename, version, maps
-        }
+        const pkg = { name, filename, version, maps }
 
         /* Return package. */
         return pkg
