@@ -23,7 +23,7 @@ const authRequest = async function (_identity) {
     const pkg = { action, proof, sig }
 
     /* Send package. */
-    this.message.send(pkg)
+    this.sendMessage(pkg)
 }
 
 module.exports = authRequest

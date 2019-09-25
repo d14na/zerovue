@@ -1,12 +1,10 @@
 /**
  * Send Message
  */
-const send = function (_msg) {
-    // console.log('READYSTATE', this.conn.socket.readyState);
-    // console.log('MSG', _msg);
-
+const sendMessage = function (_msg) {
     /* Validate socket connection. */
-    if (this.conn.socket && this.conn.socket.readyState === 1) {
+    if (this.conn && this.conn.readyState === 1) {
+    // if (this.conn.socket && this.conn.socket.readyState === 1) {
         /* Increment request id. */
         // NOTE An Id of (0) will return FALSE on validation
         this.requestId++
@@ -21,7 +19,8 @@ const send = function (_msg) {
         this.requestMgr[this.requestId] = msg
 
         /* Send serialized message. */
-        this.conn.socket.send(JSON.stringify(msg))
+        this.conn.send(JSON.stringify(msg))
+        // this.conn.socket.send(JSON.stringify(msg))
     } else {
         this.addLog(`Attempting to reconnect..`)
 
@@ -40,6 +39,7 @@ const send = function (_msg) {
     }
 }
 
-module.exports = {
-    send
-}
+module.exports = sendMessage
+// module.exports = {
+//     send
+// }

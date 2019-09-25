@@ -32,6 +32,25 @@ const calcInfoHash = function (_data) {
 }
 
 /**
+ * Retrieve Querystring Parameter (by name)
+ */
+const getParameterByName = function (name, url) {
+    if (!url) url = window.location.href
+
+    name = name.replace(/[\[\]]/g, '\\$&')
+
+    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+
+    const results = regex.exec(url)
+
+    if (!results) return null
+
+    if (!results[2]) return ''
+
+    return decodeURIComponent(results[2].replace(/\+/g, ' '))
+}
+
+/**
  * JSON Detection
  */
 const isJson = function (_str, _stringified = false) {
@@ -52,5 +71,6 @@ module.exports = {
     calcFileHash,
     calcIdentity,
     calcInfoHash,
-    isJson,
+    getParameterByName,
+    isJson
 }

@@ -111,17 +111,17 @@ const _handleInfo = async function (_data) {
         // const action = 'GET'
         // let dataId = '01c227c8c9aac311f9365b163ea94708c27a7db4:0'
         // pkg = { action, dataId }
-        // if(this.message.send(pkg)) {
+        // if(this.sendMessage(pkg)) {
         //     console.log(`Send request for [ ${dataId} ]`)
         // }
         // dataId = '01c227c8c9aac311f9365b163ea94708c27a7db4:1'
         // pkg = { action, dataId }
-        // if(this.message.send(pkg)) {
+        // if(this.sendMessage(pkg)) {
         //     console.log(`Send request for [ ${dataId} ]`)
         // }
         // dataId = '01c227c8c9aac311f9365b163ea94708c27a7db4:2'
         // pkg = { action, dataId }
-        // if(this.message.send(pkg)) {
+        // if(this.sendMessage(pkg)) {
         //     console.log(`Send request for [ ${dataId} ]`)
         // }
     }

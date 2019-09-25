@@ -1,8 +1,8 @@
 /* Initailize constants. */
 const { app } = require('electron').remote
-const fpath = require('path')
+// const fpath = require('path')
 const ipc = require('electron').ipcRenderer
-const store = require('./store')
+// const store = require('./store')
 
 /* Initialize ZeroVue application. */
 const ZeroVue = new Vue({
@@ -64,119 +64,6 @@ const ZeroVue = new Vue({
         // }
     },
     methods: {
-        /**
-         * HOST Initialization
-         */
-        initHost () {
-            /* Require ZeroKit. */
-            const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
-
-            /* Initialize ZeroKit. */
-            this.zeroKit = new ZeroKit()
-
-            this.zeroKit.postMessage = (_pkg) => {
-                // console.log('send to UI', _pkg)
-                this.UI.send('message', JSON.stringify(_pkg))
-            }
-
-            /* Handle debugger. */
-            // NOTE: Called from the 'View' menu.
-            app.on('start_debugger', function (event) {
-                console.log('HOME wants to start the debugger')
-            })
-
-            /* Handle OS application path response. */
-            ipc.on('got-os-app-path', (event, path) => {
-                // console.log('PATH', path)
-
-                /* Insert pre-loaded script. */
-                this.preload = fpath.join(
-                    'file://',
-                    path,
-                    '/libs/ZeroKit/ui.js'
-                )
-                // console.log('this.preload', this.preload)
-            })
-
-            /* Request OS application path. */
-            ipc.send('get-os-app-path')
-        },
-
-        /**
-         * User-Interface (UI) Initialization
-         */
-        initUI () {
-            /* Initialize (webview) User Interface. */
-            this.UI = document.querySelector('webview')
-
-            /* Handle DOM ready. */
-            const _domReady = () => {
-                /* Send (via ipcRenderer listener). */
-                // this.UI.send('ping')
-                this.UI.send('message', 'btw, the DOM is ready to go!!')
-
-                /* Send (via native Js). */
-                this.UI.executeJavaScript('_0.domReady()')
-            }
-
-            /* Initialize DOM listener. */
-            // NOTE: This lets us know as soon as the UI DOM is ready.
-            this.UI.addEventListener('dom-ready', _domReady)
-
-            /* Handle IPC Messages. */
-            // NOTE: This is how we receive our `postMessage` requests from UI
-            //       using the `ipcRenderer.sendToHost` method.
-            this.UI.addEventListener('ipc-message', (event) => {
-                /* Retrieve channel. */
-                const channel = event.channel
-
-                let pkg
-
-                try {
-                    pkg = JSON.parse(channel)
-
-                    console.log('IPC Package', pkg)
-
-                    const action = pkg.action
-
-                    switch(action) {
-                    case 'testConnection':
-                        this.zeroKit.testConnection()
-                        break
-                    case 'updateWebSource':
-                        const body = pkg.body
-                        console.log('received body', body)
-
-                        this.updateWebSource(body)
-                        break
-                    case 'testD14naIndex':
-                        this.updateWebSource(`Who said you could change this?`)
-                        // this.zeroKit.testD14naIndex()
-                        break
-                    }
-                } catch (e) {
-                    // IGNORE ALL DECODING ERRORS
-                    // return console.error(e)
-                }
-            })
-
-            /* Capture ALL console messages from SANDBOX. */
-            this.UI.addEventListener('console-message', function (e) {
-                /* Parse source file. */
-            	const srcFile = e.sourceId.replace(/^.*[\\\/]/, '')
-
-                /* Build new log entry. */
-                const timestamp = `➤ ZeroKit Console ${moment().format('YYYY.MM.DD @ HH:mm:ss')}`
-                const entry = `[ ${srcFile} ](Line ${e.line}): ${e.message}`
-
-                /* Add to log manager. */
-                // App.logMgr.push(`${timestamp} ${entry}`)
-
-                /* Write to console. */
-                console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')
-            })
-        },
-
         /**
          * Open Clearnet (Web Link)
          */
@@ -291,10 +178,18 @@ const ZeroVue = new Vue({
 
     },
     mounted: function () {
+        /* Require host initialization. */
+        // NOTE: Bind context to `this`.
+        const initHost = require('./_initHost.js').bind(this)
+
         /* Initialize ZeroKit (HOST). */
-        this.initHost()
+        initHost()
+
+        /* Require host initialization. */
+        // NOTE: Bind context to `this`.
+        const initUI = require('./_initUI.js').bind(this)
 
         /* Initialize ZeroKit (UI). */
-        this.initUI()
+        initUI()
     }
 })

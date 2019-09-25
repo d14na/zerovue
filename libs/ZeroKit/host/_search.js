@@ -8,11 +8,13 @@
  *     2. Torrent (info hash)
  *     3. IPFS (cid)
  */
-const _search = async function (_query) {
+const search = async function (_query) {
     /* Set query. */
     const query = _query
 
     this.addLog(`Searching for [ ${query} ]`)
+
+    return ZeroVue.updateWebSource(`Sooo, you're looking for some [ ${_query} ]?`)
 
     /* Show "connecting.." notification. */
     await wait('Peer-to-Peer Search', `Processing request for<br />[ <strong class="text-primary">${query}</strong> ]`, 'Please wait..')
@@ -116,8 +118,10 @@ const _search = async function (_query) {
     }
 
     /* Send package. */
-    if (this.message.send(pkg)) {
+    if (this.sendMessage(pkg)) {
         /* Reset search. */
         App._resetSearch()
     }
 }
+
+module.exports = search

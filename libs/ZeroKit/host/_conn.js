@@ -13,12 +13,16 @@ const connect = async function (_endpoint) {
     // await _app.wait('Connecting to Supeer', 'This will only take a moment.', 'Please wait..')
 
     /* Create a new Socket JS connection . */
-    this.conn.socket = new SockJS(_endpoint)
+    this.conn = new SockJS(_endpoint)
+    // this.conn.socket = new SockJS(_endpoint)
 
     /* Initialize event handlers. */
-    this.conn.socket.onopen = _connOpen.bind(this)
-    this.conn.socket.onmessage = _connMessage.bind(this)
-    this.conn.socket.onclose = _connClose.bind(this)
+    this.conn.onopen = _connOpen.bind(this)
+    this.conn.onmessage = _connMessage.bind(this)
+    this.conn.onclose = _connClose.bind(this)
+    // this.conn.socket.onopen = _connOpen.bind(this)
+    // this.conn.socket.onmessage = _connMessage.bind(this)
+    // this.conn.socket.onclose = _connClose.bind(this)
 }
 
 /**
@@ -37,7 +41,7 @@ const _connOpen = async function () {
     const pkg = { action }
 
     /* Send package. */
-    this.message.send(pkg)
+    this.sendMessage(pkg)
 }
 
 /**
@@ -60,6 +64,7 @@ const _connClose = function () {
     // App._setConnStatus('Supeer Disconnected', 'text-danger')
 }
 
-module.exports = {
-    connect
-}
+module.exports = connect
+// module.exports = {
+//     connect
+// }

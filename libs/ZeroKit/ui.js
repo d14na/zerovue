@@ -102,17 +102,6 @@ class ZeroKit {
         ipcRenderer.sendToHost(JSON.stringify(pkg))
     }
 
-    testD14naIndex () {
-        /* Set action. */
-        const action = 'testD14naIndex'
-
-        /* Build package. */
-        const pkg = { action }
-
-        /* Send message to host. */
-        ipcRenderer.sendToHost(JSON.stringify(pkg))
-    }
-
     /**
      * DOM Handler
      */
