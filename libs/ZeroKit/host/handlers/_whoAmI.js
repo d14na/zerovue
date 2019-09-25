@@ -1,5 +1,5 @@
 /**
- * WHOAMI Request Handler
+ * Request Handler
  */
 const handler = function (_data) {
     /* Retrieve the identity. */

@@ -11,12 +11,15 @@ const ZeroVue = new Vue({
         /* ZeroKit */
         zeroKit: null,
 
+        /* Search Value */
+        searchVal: '',
+
         /* Greeting */
         // TODO Add translations for this opening message.
         navGreeting: 'Welcome! This is an early preview of the ZeroVue Rendering Engine.',
 
         /* Webview Source */
-        mySource: '',
+        webSource: 'data:text/html,Loading. Please wait..',
 
         /* Webview Preload (Script) */
         preload: 'file:',
@@ -61,6 +64,9 @@ const ZeroVue = new Vue({
         // }
     },
     methods: {
+        /**
+         * HOST Initialization
+         */
         initHost () {
             /* Require ZeroKit. */
             const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
@@ -72,8 +78,33 @@ const ZeroVue = new Vue({
                 // console.log('send to UI', _pkg)
                 this.UI.send('message', JSON.stringify(_pkg))
             }
+
+            /* Handle debugger. */
+            // NOTE: Called from the 'View' menu.
+            app.on('start_debugger', function (event) {
+                console.log('HOME wants to start the debugger')
+            })
+
+            /* Handle OS application path response. */
+            ipc.on('got-os-app-path', (event, path) => {
+                // console.log('PATH', path)
+
+                /* Insert pre-loaded script. */
+                this.preload = fpath.join(
+                    'file://',
+                    path,
+                    '/libs/ZeroKit/ui.js'
+                )
+                // console.log('this.preload', this.preload)
+            })
+
+            /* Request OS application path. */
+            ipc.send('get-os-app-path')
         },
 
+        /**
+         * User-Interface (UI) Initialization
+         */
         initUI () {
             /* Initialize (webview) User Interface. */
             this.UI = document.querySelector('webview')
@@ -112,14 +143,14 @@ const ZeroVue = new Vue({
                     case 'testConnection':
                         this.zeroKit.testConnection()
                         break
-                    case 'updateMySource':
+                    case 'updateWebSource':
                         const body = pkg.body
                         console.log('received body', body)
 
-                        this.updateMySource(body)
+                        this.updateWebSource(body)
                         break
                     case 'testD14naIndex':
-                        this.updateMySource(`Who said you could change this?`)
+                        this.updateWebSource(`Who said you could change this?`)
                         // this.zeroKit.testD14naIndex()
                         break
                     }
@@ -146,30 +177,47 @@ const ZeroVue = new Vue({
             })
         },
 
-        open (link) {
-            this.$electron.shell.openExternal(link)
+        /**
+         * Open Clearnet (Web Link)
+         */
+        openClearnet (_link) {
+            this.$electron.shell.openExternal(_link)
         },
 
-        updateMySource (_source) {
-            this.mySource = `data:text/html,${_source}`
+        /**
+         * Update Web (HTML) Source
+         */
+        updateWebSource (_source) {
+            // NOTE: We MUST prefix the HTML with a data object.
+            this.webSource = `data:text/html,${_source}`
         },
 
+        /**
+         * Load Homepage
+         */
         home () {
-            console.log('go home')
+            /* Go to homepage. */
+            this.zeroKit.goHome()
         },
 
+        /**
+         * Open a File
+         */
         openFile () {
             ipc.send('open-file-dialog')
         },
 
+        /**
+         * Search
+         *
+         * Uses the input field value.
+         */
         search () {
-            // const ZeroKit = require(__dirname + '/../libs/ZeroKit/host').module
-            // console.log('ZeroKit', ZeroKit)
+            // this.zeroKit.search('i am looking for something SMPL')
 
-            /* Initialize new ZeroKit. */
-            // const zeroKit = new ZeroKit()
+            this.updateWebSource(`Who said you could change this?`)
+            // this.zeroKit.testD14naIndex()
 
-            this.zeroKit.search('i am looking for something SMPL')
         },
 
         // _parseFlags: function (_flags) {
@@ -246,42 +294,10 @@ const ZeroVue = new Vue({
 
     },
     mounted: function () {
-        /* Initialize ZeroKit (from HOST). */
+        /* Initialize ZeroKit (HOST). */
         this.initHost()
 
-        /* Initialize ZeroKit (from UI). */
+        /* Initialize ZeroKit (UI). */
         this.initUI()
-
-        app.on('start_debugger', function (event) {
-        // app.on('start_debugger', function (event) {
-            console.log('HOME wants to start the debugger')
-        })
-
-        /* Handle OS path request. */
-        ipc.on('got-os-app-path', (event, path) => {
-            // console.log('PATH', path)
-
-            /* Insert pre-loaded script. */
-            this.preload = fpath.join(
-                'file://',
-                path,
-                '/libs/ZeroKit/ui.js'
-            )
-
-            // console.log('this.preload', this.preload)
-
-            // FOR DEVELOPMENT PURPOSES ONLY
-            this.mySource = `data:text/html,
-How much <strong>HTML</strong> can we fit in here??
-<div id="testArea"><!-- test area --></div>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testD14naIndex()">Test D14na Index</button>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testConnection()">Test Connection</button>
-<br /><button class="uk-button uk-button-danger uk-button-small" onclick="_0.testPostMessage()">Test PostMessage</button>
-<style></style>
-            `
-        })
-
-        /* Request OS application path. */
-        ipc.send('get-os-app-path')
     }
 })

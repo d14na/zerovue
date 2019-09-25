@@ -1,5 +1,5 @@
 /**
- * Handle 0NET Authorization
+ * Request Handler
  */
 const handler = function (_data) {
     console.log('HANDLING AUTH', _data);

@@ -1,5 +1,5 @@
 /**
- * Event Listener: MESSAGE
+ * Request Handler
  *
  * Receives and handles ALL incoming messages from our embedded iframe.
  *

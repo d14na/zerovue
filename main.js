@@ -1,13 +1,26 @@
-// Modules to control application life and create native browser window
-const {app, dialog, BrowserWindow, ipcMain} = require('electron')
+const {
+    app,
+    BrowserWindow,
+    dialog,
+    ipcMain
+} = require('electron')
+
 const path = require('path')
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+/**
+ * Main Window
+ *
+ * NOTE: We keep a global reference of the window object. If we don't,
+ *       the window will be closed automatically when the JavaScript object
+ *       is garbage collected.
+ */
 let mainWindow
 
+/**
+ * Create Window
+ */
 function createWindow () {
-    // Create the browser window.
+    /* Create the browser window. */
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -17,17 +30,15 @@ function createWindow () {
         }
     })
 
-    // and load the index.html of the app.
+    /* Load the index.html of the app. */
     mainWindow.loadFile('src/index.html')
 
-    // Open the DevTools.
+    /* Open the DevTools. */
     // mainWindow.webContents.openDevTools()
 
-    // Emitted when the window is closed.
+    /* Handle window closing. */
     mainWindow.on('closed', function () {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
+        /* Cleanup. */
         mainWindow = null
     })
 }
@@ -50,13 +61,20 @@ app.on('activate', function () {
     if (mainWindow === null) createWindow()
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+/* Initialize menu. */
+require('./src/_menu')
 
+/**
+ * Get (OS) App Path
+ */
 ipcMain.on('get-os-app-path', function (event) {
+    /* Send response. */
     event.sender.send('got-os-app-path', app.getAppPath())
 })
 
+/**
+ * Open File Dialog
+ */
 ipcMain.on('open-file-dialog', function (event) {
     dialog.showOpenDialog({
         properties: ['openFile', 'openDirectory']
@@ -64,9 +82,3 @@ ipcMain.on('open-file-dialog', function (event) {
         if (files) event.sender.send('selected-directory', files)
     })
 })
-
-/* Initialize menu. */
-require('./src/_menu')
-
-/* Initialize modals. */
-require('./src/_modals')

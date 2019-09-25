@@ -26,13 +26,13 @@ ipcRenderer.on('ping', () => {
 
 /* Handle incoming HOST Post Message. */
 ipcRenderer.on('message', (event, message) => {
-    console.log(`ipcRenderer: Incoming Post Message [ ${message} ]`)
-    // console.log(`ipcRenderer: Incoming Post Message [ ${JSON.stringify(message)} ]`)
+    console.log(`ipcRenderer: Incoming Post Message [ ${JSON.stringify(message)} ]`)
 
     // TODO Handle incoming message
     // console.log(message);
 
     let body = null
+    let append = false
     let prepend = false
 
     try {
@@ -40,6 +40,8 @@ ipcRenderer.on('message', (event, message) => {
 
         body = message.body
 
+        const append = message.append
+        console.log(apend)
         const prepend = message.prepend
         console.log(prepend)
     } catch (e) {
@@ -53,7 +55,7 @@ ipcRenderer.on('message', (event, message) => {
         console.log('BODY')
         console.log(body)
 
-        let action = 'updateMySource'
+        let action = 'updateWebSource'
 
         let pkg = { action, body }
 

@@ -7,7 +7,7 @@
  *
  */
 class ZeroKit {
-    constructor (host = 'https://supeer.host') {
+    constructor (_host = 'https://supeer.host') {
         /* Send an empty message to the zerovue to initialize. */
         // this.authGatekeeper()
 
@@ -21,7 +21,7 @@ class ZeroKit {
         *******************************************************************************/
 
         /* Initialize constants. */
-        const WS_ENDPOINT = 'https://supeer.host' // WebSockets endpoint
+        // const WS_ENDPOINT = 'https://supeer.host' // WebSockets endpoint
         const INFURA_API_KEY = '61a2428e6a4e41a695d876dfac323f0f' // Infura API key
 
         /* Initialize connection manager. */
@@ -55,8 +55,12 @@ class ZeroKit {
         const utils = require('./host/_utils.js')
         this.calcIdentity = utils.calcIdentity.bind(this)
 
+        /* Initialize handlers. */
+        this.goHome = require('./host/handlers/_goHome.js')
+        // this.goHome = this.goHome.bind(this)
+
         /* Request connection to supeer. */
-        this.conn.connect(WS_ENDPOINT)
+        this.conn.connect(_host)
     }
 
     /**
