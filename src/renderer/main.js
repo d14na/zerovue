@@ -11,8 +11,8 @@ const ZeroVue = new Vue({
         /* ZeroKit */
         zeroKit: null,
 
-        /* Search Value */
-        searchVal: '',
+        /* (Search) Query Value */
+        query: '',
 
         /* Greeting */
         // TODO Add translations for this opening message.
@@ -213,11 +213,8 @@ const ZeroVue = new Vue({
          * Uses the input field value.
          */
         search () {
-            // this.zeroKit.search('i am looking for something SMPL')
-
-            this.updateWebSource(`Who said you could change this?`)
-            // this.zeroKit.testD14naIndex()
-
+            /* Perform search (on user query). */
+            this.zeroKit.search(this.query)
         },
 
         // _parseFlags: function (_flags) {

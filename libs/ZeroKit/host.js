@@ -8,9 +8,6 @@
  */
 class ZeroKit {
     constructor (_host = 'https://supeer.host') {
-        /* Send an empty message to the zerovue to initialize. */
-        // this.authGatekeeper()
-
         /*******************************************************************************
 
           SockJS
@@ -55,102 +52,16 @@ class ZeroKit {
         const utils = require('./host/_utils.js')
         this.calcIdentity = utils.calcIdentity.bind(this)
 
-        /* Initialize handlers. */
+        /* Initialize handlers (functions / methods). */
+        this.addLog = require('./host/handlers/_addLog.js')
+        this.authRequest = require('./host/handlers/_authRequest.js')
+        this.errors = require('./host/handlers/_errors.js')
+        this.getAction = require('./host/handlers/_getAction.js')
         this.goHome = require('./host/handlers/_goHome.js')
-        // this.goHome = this.goHome.bind(this)
+        this.search = require('./host/handlers/_search.js')
 
         /* Request connection to supeer. */
         this.conn.connect(_host)
-    }
-
-    /**
-     * Add Log Entry
-     *
-     * NOTE All significant activities (that are NOT directly alerted to the user)
-     *      are handled and recorded by this logging event.
-     */
-    addLog (_message) {
-        /* Build new log entry. */
-        const timestamp = `➤ Supeer ${moment().format('YYYY.MM.DD @ HH:mm:ss')}`
-        const entry = `[ ${_message} ]`
-
-        /* Add to log manager. */
-        // App.logMgr.push(`${timestamp} ${entry}`)
-
-        /* Write to console. */
-        console.info('%c' + timestamp + '%c ' + entry, 'color:red', 'color:black')
-    }
-
-    /**
-     * Error Handler
-     *
-     * TODO How should we handle CRITICAL errors??
-     */
-    errorHandler (_err, _critical = false) {
-        /* Handle critical errors with a throw (terminate application). */
-        if (_critical) {
-            throw new Error(_err)
-        } else {
-            console.error(_err)
-        }
-    }
-
-    /**
-     * Retrieve Action from Requests Manager
-     */
-    getAction (_data) {
-        /* Initialize action. */
-        let action = null
-
-        /* Retrieve request id. */
-        const requestId = _data.requestId
-
-        if (requestId && this.requestMgr[requestId]) {
-            /* Retrieve action. */
-            action = this.requestMgr[requestId].action
-
-            // TODO Completed requests should be CANCELLED by messaging the network.
-
-            /* Remove request from manager. */
-            // FIXME Verify that we do not need to persist this request
-            //       other than to retrieve the ACTION
-            // delete this.requestMgr[requestId]
-        }
-
-        /* Return the action. */
-        return action
-    }
-
-    /**
-     * Authorization Request
-     */
-    async authRequest (_identity) {
-        /* Set action. */
-        const action = 'AUTH'
-
-        /* Initialize network protocol. */
-        const network = '0NET-TLR' // 0NET: TrustLess Republic
-
-        /* Initialize nonce. */
-        const nonce = moment().unix()
-
-        /* Build proof (string). */
-        const proof = `${network}:${_identity}:${nonce}`
-        // console.log('Proof', proof)
-
-        /* Retrieve signed proof. */
-        const sig = await this.signAuth(proof)
-        this.addLog(`Authentication proof: [ ${proof} ]`)
-
-        /* Build package. */
-        const pkg = { action, proof, sig }
-
-        /* Send package. */
-        this.message.send(pkg)
-    }
-
-    search (_val) {
-        console.log('Start searching for', _val)
     }
 
     /**
@@ -617,7 +528,7 @@ class ZeroKit {
 
             /* Validate action. */
             if (!action) {
-                return this.errorHandler(`No ACTION was found for [ ${JSON.stringify(data)} ]`, false)
+                return this.errors(`No ACTION was found for [ ${JSON.stringify(data)} ]`, false)
             }
 
             /* Initialize (data) managers. */
@@ -628,13 +539,13 @@ class ZeroKit {
             switch (action.toUpperCase()) {
             case 'AUTH':
                 /* Initialize handler. */
-                let handler1 = require('./host/handlers/_auth.js')
+                handler = require('./host/handlers/_auth.js')
 
                 /* Bind context to handler. */
-                handler1 = handler1.bind(this)
+                handler = handler.bind(this)
 
                 /* Handle response. */
-                return handler1(data)
+                return handler(data)
             case 'GET':
                 if (data.dest && data.innerPath) { // Zeronet
                     /* Retrieve destination. */
@@ -687,23 +598,7 @@ class ZeroKit {
                 // nothing to do here
             }
         } catch (_err) {
-            this.errorHandler(_err, false)
-        }
-    }
-
-    /**
-     * Authorize Gatekeeper
-     */
-    async authGatekeeper () {
-        /* Show "connecting.." notification. */
-        await this.wait('Starting New Session', 'This will only take a moment.', 'Please wait..')
-
-        /* Validate application initialization. */
-        if (!this.gateReady) {
-            setTimeout(() => {
-                /* Send empty message to the zerovue for initialization. */
-                this.uiMsg()
-            }, 1000)
+            this.errors(_err, false)
         }
     }
 

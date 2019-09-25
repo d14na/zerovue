@@ -1,7 +1,7 @@
 /**
- * Request Handler
+ * Who Am I
  */
-const handler = function (_data) {
+const whoAmI = function (_data) {
     /* Retrieve the identity. */
     const identity = _data.identity
 
@@ -42,4 +42,4 @@ const handler = function (_data) {
     // this.clearModals()
 }
 
-module.exports = handler
+module.exports = whoAmI

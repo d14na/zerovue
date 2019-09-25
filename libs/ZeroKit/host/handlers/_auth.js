@@ -1,7 +1,7 @@
 /**
- * Request Handler
+ * Authorize
  */
-const handler = function (_data) {
+const auth = function (_data) {
     console.log('HANDLING AUTH', _data);
     /* Validate data. */
     if (!_data || !_data.account) {
@@ -30,4 +30,4 @@ const handler = function (_data) {
     this.clearModals()
 }
 
-module.exports = handler
+module.exports = auth

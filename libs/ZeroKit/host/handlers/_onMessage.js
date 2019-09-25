@@ -1,5 +1,5 @@
 /**
- * Request Handler
+ * On Message
  *
  * Receives and handles ALL incoming messages from our embedded iframe.
  *
@@ -8,7 +8,7 @@
  * have to be careful about accepting data via the messaging API we've
  * created. We verify the source, and validate ALL inputs.
  */
-const handler = async function (_event) {
+const onMessage = async function (_event) {
     // console.log('INCOMING MESSAGE EVENT', _event)
 
     /* Retrieve origin. */
@@ -404,4 +404,4 @@ const handler = async function (_event) {
 //     contentWindow.postMessage(_message, '*')
 // }
 
-module.exports = handler
+module.exports = onMessage

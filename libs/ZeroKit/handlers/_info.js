@@ -12,7 +12,7 @@ const _handleInfo = async function (_data) {
 
     /* Validate metadata. */
     if (!metadata) {
-        return errorHandler(
+        return errors(
             `Oops! No torrent info found in [ ${JSON.stringify(_data.info)} ]`, false)
     }
 
@@ -24,7 +24,7 @@ const _handleInfo = async function (_data) {
     if (torrentInfo) {
         this.addLog(`[ ${infoHash} ] METADATA was verified successfully!`)
     } else {
-        return errorHandler(
+        return errors(
             `Oops! Torrent metadata FAILED verification [ ${JSON.stringify(_data.info)} ]`, false)
     }
 

@@ -89,7 +89,7 @@ const _dbWrite = async function (_dbName, _dataId, _data) {
 
     /* Add/update document in database. */
     result = await _dbManager[_dbName].put(pkg)
-        .catch(errorHandler)
+        .catch(errors)
 
     /* Return the result. */
     if (result) {
@@ -115,7 +115,7 @@ const _dbRead = async function (_dbName, _dataId, _query = null) {
 
     /* Retrieve all docs (using `key` filter). */
     const docs = await _dbManager[_dbName].allDocs(options)
-        .catch(errorHandler)
+        .catch(errors)
 
     /* Validate docs. */
     if (docs && docs['rows'].length) {
@@ -147,9 +147,9 @@ const _dbDelete = async function (_dbName, _dataId) {
     if (exists && exists._id === _dataId) {
         /* Remove document from database. */
         result = await _dbManager[_dbName].remove(exists)
-            .catch(errorHandler)
+            .catch(errors)
     } else {
-        return errorHandler('File was NOT found.', false)
+        return errors('File was NOT found.', false)
     }
 
     /* Return the result. */
